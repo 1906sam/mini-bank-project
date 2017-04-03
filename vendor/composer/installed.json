@@ -2113,5 +2113,55 @@
             "cakephp",
             "oauth2"
         ]
+    },
+    {
+        "name": "maiconpinto/cakephp-adminlte-theme",
+        "version": "1.0.5",
+        "version_normalized": "1.0.5.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/maiconpinto/cakephp-adminlte-theme.git",
+            "reference": "8e74df46f4a0be51eb5435908b5d494b683ce069"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/maiconpinto/cakephp-adminlte-theme/zipball/8e74df46f4a0be51eb5435908b5d494b683ce069",
+            "reference": "8e74df46f4a0be51eb5435908b5d494b683ce069",
+            "shasum": ""
+        },
+        "require": {
+            "cakephp/cakephp": "~3.0",
+            "php": ">=5.4.16"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.1"
+        },
+        "time": "2016-10-26 16:42:45",
+        "type": "cakephp-plugin",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "AdminLTE\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Maicon Pinto",
+                "email": "maiconsilva.pinto@gmail.com",
+                "homepage": "https://www.maiconpinto.com.br/",
+                "role": "Author"
+            }
+        ],
+        "description": "CakePHP 3.x AdminLTE Theme.",
+        "homepage": "https://github.com/maiconpinto/cakephp-adminlte-theme",
+        "keywords": [
+            "cakephp",
+            "plugin",
+            "templates"
+        ]
     }
 ]

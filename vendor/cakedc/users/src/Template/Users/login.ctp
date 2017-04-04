@@ -40,7 +40,7 @@ use Cake\Core\Configure;
                 if ($registrationActive) {
                     echo ' | ';
                 }
-                echo $this->Html->link(__d('CakeDC/Users', 'Reset Password'), ['action' => 'requestResetPassword']);
+                //echo $this->Html->link(__d('CakeDC/Users', 'Reset Password'), ['action' => 'requestResetPassword']);
             }
             ?>
     </fieldset>

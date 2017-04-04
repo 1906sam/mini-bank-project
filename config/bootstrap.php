@@ -233,9 +233,9 @@ Configure::write('Theme', [
         'large' => '<b>Admin</b>LTE'
     ],
     'login' => [
-        'show_remember' => true,
-        'show_register' => true,
-        'show_social' => true
+        'show_remember' => false,
+        'show_register' => false,
+        'show_social' => false
     ],
     'folder' => ROOT
 ]);

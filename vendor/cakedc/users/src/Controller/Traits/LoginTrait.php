@@ -147,6 +147,7 @@ trait LoginTrait
      */
     public function login()
     {
+        $this->viewBuilder()->layout('login');
         $event = $this->dispatchEvent(UsersAuthComponent::EVENT_BEFORE_LOGIN);
         if (is_array($event->result)) {
             return $this->_afterIdentifyUser($event->result);

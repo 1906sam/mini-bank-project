@@ -513,12 +513,16 @@ $this->Html->css([
     'AdminLTE./plugins/jvectormap/jquery-jvectormap-1.2.2',
     'AdminLTE./plugins/datepicker/datepicker3',
     'AdminLTE./plugins/daterangepicker/daterangepicker-bs3',
-    'AdminLTE./plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min'
+    'AdminLTE./plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min',
+    'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
+//    'https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css'
   ],
   ['block' => 'css']);
 
 $this->Html->script([
   'https://code.jquery.com/ui/1.11.4/jquery-ui.min.js',
+//  'https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js',
+//  'https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js',
   'AdminLTE./plugins/morris/morris.min',
   'AdminLTE./plugins/sparkline/jquery.sparkline.min',
@@ -688,4 +692,5 @@ $this->Html->script([
       });
 
     </script>
+
 <?php  $this->end(); ?>

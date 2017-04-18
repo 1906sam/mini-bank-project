@@ -50,7 +50,17 @@ Router::scope('/', function (RouteBuilder $routes) {
      * to use (in this case, src/Template/Pages/home.ctp)...
      */
     $routes->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
-
+    $routes->connect('/addClients',['controller' => 'ClientDetails','action' => 'add']);
+    $routes->connect('/viewClients',['controller' => 'ClientDetails','action' => 'index']);
+    $routes->connect('/addRd/*',['controller' => 'ClientRd','action' => 'add']);
+    $routes->connect('/viewRdInformation',['controller' => 'ClientRd','action' => 'index']);
+    $routes->connect('/viewRdPayment',['controller' => 'ClientRdPayments','action' => 'index']);
+    $routes->connect('/addFd',['controller' => 'ClientFd','action' => 'add']);
+    $routes->connect('/viewFdInformation',['controller' => 'ClientFd','action' => 'index']);
+    $routes->connect('/addLoan',['controller' => 'ClientLoan','action' => 'add']);
+    $routes->connect('/viewLoanInformation',['controller' => 'ClientLoan','action' => 'index']);
+    $routes->connect('/viewRdPayment',['controller' => 'ClientRdPayments','action' => 'index']);
+    $routes->connect('/viewLoanPayment',['controller' => 'ClientLoanPayments','action' => 'index']);
     /**
      * ...and connect the rest of 'Pages' controller's URLs.
      */

@@ -65,7 +65,7 @@ class ClientFdTable extends Table
             ->notEmpty('time_duration');
 
         $validator
-            ->integer('rate_of_interest')
+            ->numeric('rate_of_interest')
             ->requirePresence('rate_of_interest', 'create')
             ->notEmpty('rate_of_interest');
 

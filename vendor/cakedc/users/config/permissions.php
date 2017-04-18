@@ -77,6 +77,13 @@ return [
                 return false;
             }
         ],
+            //allow logout
+        [
+            'role' => 'user',
+            'plugin' => 'CakeDC/Users',
+            'controller' => 'Users',
+            'action' => ['logout'],
+        ],
         [
             'role' => 'user',
             'plugin' => 'CakeDC/Users',

@@ -1,30 +1,22 @@
 <?php
 /**
-  * @var \App\View\AppView $this
-  */
+ * @var \App\View\AppView $this
+ */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('List Client Fd'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Client Details'), ['controller' => 'ClientDetails', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Client Detail'), ['controller' => 'ClientDetails', 'action' => 'add']) ?></li>
-    </ul>
-</nav>
 <div class="clientFd form large-9 medium-8 columns content">
+    <legend><?= __('Add Client Fd') ?></legend>
     <?= $this->Form->create($clientFd) ?>
     <fieldset>
-        <legend><?= __('Add Client Fd') ?></legend>
-        <?php
-            echo $this->Form->input('client_id', ['options' => $clientDetails]);
-            echo $this->Form->input('fd_amount');
-            echo $this->Form->input('time_duration');
-            echo $this->Form->input('rate_of_interest');
-            echo $this->Form->input('status');
-            echo $this->Form->input('created_date');
-            echo $this->Form->input('modified_date', ['empty' => true]);
-        ?>
+    <?php
+    echo $this->Form->input('client_id',['options' => $clientDetails,'empty' => 'Select Client','label' => 'Select client for FD.','id' => 'combobox']);
+    echo $this->Form->input('fd_amount',['label' => 'FD amount in Rs.']);
+    echo $this->Form->input('time_duration',['label' => 'Time duration (years)','value' => 5]);
+    echo $this->Form->input('rate_of_interest',['label' => 'Rate of Interest (%)','value' => 14.1]);
+    echo $this->Form->input('status',['options' => ['0' => 'Active', '1' => 'Closed'],'value' => 0,'label' => 'Status of FD']);
+    echo $this->Form->input('created_date',['value' => date("Y-m-d H:i:s"),'type' => 'hidden']);
+    //            echo $this->Form->input('modified_date', ['empty' => true]);
+    ?>
     </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
+        <?= $this->Form->button(__('Submit')) ?>
     <?= $this->Form->end() ?>
 </div>

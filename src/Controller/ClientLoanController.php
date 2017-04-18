@@ -61,7 +61,11 @@ class ClientLoanController extends AppController
             }
             $this->Flash->error(__('The client loan could not be saved. Please, try again.'));
         }
-        $clientDetails = $this->ClientLoan->ClientDetails->find('list', ['limit' => 200]);
+        $clientDetails = $this->ClientLoan->ClientDetails->find('list', [
+            'limit' => 200,
+            'keyField' => 'id',
+            'valueField' => 'client_name'
+        ]);
         $this->set(compact('clientLoan', 'clientDetails'));
         $this->set('_serialize', ['clientLoan']);
     }

@@ -60,9 +60,9 @@ class ClientRdPaymentsTable extends Table
             ->notEmpty('installment_received');
 
         $validator
-            ->integer('final_rd_amount')
-            ->requirePresence('final_rd_amount', 'create')
-            ->notEmpty('final_rd_amount');
+            ->integer('final_rd_amount');
+            //->requirePresence('final_rd_amount', 'create')
+            //->notEmpty('final_rd_amount');
 
         $validator
             ->integer('penalty')

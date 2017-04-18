@@ -10,7 +10,7 @@ use Cake\ORM\Entity;
  * @property int $client_id
  * @property int $fd_amount
  * @property int $time_duration
- * @property int $rate_of_interest
+ * @property float $rate_of_interest
  * @property int $status
  * @property \Cake\I18n\Time $created_date
  * @property \Cake\I18n\Time $modified_date

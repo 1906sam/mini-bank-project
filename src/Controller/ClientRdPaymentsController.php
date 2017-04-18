@@ -21,9 +21,29 @@ class ClientRdPaymentsController extends AppController
         $this->paginate = [
             'contain' => ['ClientRd']
         ];
-        $clientRdPayments = $this->paginate($this->ClientRdPayments);
 
-        $this->set(compact('clientRdPayments'));
+        $clientRdPayments = $this->paginate($this->ClientRdPayments);
+        $clientRd = $this->loadModel('ClientRd');
+        $clientDetails = $this->loadModel('ClientDetails');
+        //$clientData = $clientDetails->get($id);
+        $clientRdData = $clientRd->find('list',[
+            'keyField' => 'id',
+            'valueField' => 'client_id'
+        ])->toArray();
+
+        $clientData = $clientDetails->find('list',[
+            'keyField' => 'id',
+            'valueField' => 'client_name',
+            'conditions' => ['id in' => $clientRdData]
+        ])->toArray();
+
+        $clientRdInfo = null;
+        foreach ($clientRdData as $data)
+        {
+            $clientRdInfo[array_search($data,$clientRdData)] = $clientData[$data];
+        }
+
+        $this->set(compact(['clientRdPayments','clientRdInfo','clientRdData']));
         $this->set('_serialize', ['clientRdPayments']);
     }
 
@@ -47,9 +67,10 @@ class ClientRdPaymentsController extends AppController
     /**
      * Add method
      *
+     * @param null $id
      * @return \Cake\Network\Response|null Redirects on successful add, renders view otherwise.
      */
-    public function add()
+    public function add($id=null)
     {
         $clientRdPayment = $this->ClientRdPayments->newEntity();
         if ($this->request->is('post')) {
@@ -61,8 +82,20 @@ class ClientRdPaymentsController extends AppController
             }
             $this->Flash->error(__('The client rd payment could not be saved. Please, try again.'));
         }
-        $clientRd = $this->ClientRdPayments->ClientRd->find('list', ['limit' => 200]);
-        $this->set(compact('clientRdPayment', 'clientRd'));
+        $clientRd = $this->loadModel('ClientRd');
+        $clientDetails = $this->loadModel('ClientDetails');
+        $clientData = $clientDetails->get($id);
+        $clientRdData = $clientRd->find('list',[
+            'keyField' => 'id',
+            'valueField' => 'client_id',
+           'conditions' => ['client_id' => $id]
+        ])->toArray();
+
+        $clientRdInfo = array(
+            array_search($id,$clientRdData) => $clientData['client_name']
+        );
+
+        $this->set(compact('clientRdPayment','clientRdInfo'));
         $this->set('_serialize', ['clientRdPayment']);
     }
 

@@ -3,39 +3,42 @@
   * @var \App\View\AppView $this
   */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('New Client Rd Payment'), ['action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Client Rd'), ['controller' => 'ClientRd', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Client Rd'), ['controller' => 'ClientRd', 'action' => 'add']) ?></li>
-    </ul>
-</nav>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/pdfmake-0.1.18/dt-1.10.13/af-2.1.3/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/b-print-1.2.4/kt-2.2.0/r-2.1.1/se-1.2.0/datatables.min.css"/>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/pdfmake-0.1.18/dt-1.10.13/af-2.1.3/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/b-print-1.2.4/kt-2.2.0/r-2.1.1/se-1.2.0/datatables.min.js"></script>
+
 <div class="clientRdPayments index large-9 medium-8 columns content">
-    <h3><?= __('Client Rd Payments') ?></h3>
-    <table cellpadding="0" cellspacing="0">
+    <h1 style="text-align: center; text-decoration: underline"><?= __('Client RD Payments') ?></h1>
+    <table id="clientRdPaymentTable" class="table table-striped table-bordered table-hover table-condensed dt-responsive nowrap" cellspacing="0"  width="100%">
         <thead>
             <tr>
-                <th scope="col"><?= $this->Paginator->sort('id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('client_rd_id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('installment_received') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('final_rd_amount') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('penalty') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('created_date') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('modified_date') ?></th>
-                <th scope="col" class="actions"><?= __('Actions') ?></th>
+                <th>S.No.</th>
+                <th>Client Rd Information</th>
+                <th>Client Name</th>
+                <th>Installment Received</th>
+<!--                <th>final_rd_amount</th>-->
+                <th>Penalty</th>
+                <th>Created Date</th>
+<!--                <th>modified_date</th>-->
+                <th class="actions">Actions</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($clientRdPayments as $clientRdPayment): ?>
+            <?php  $count = 0; $class = "";
+            foreach ($clientRdPayments as $clientRdPayment):  $count++;
+                if($count %2 == 0)
+                    $class = "";
+                else
+                    //$class = "success";
+                    ?>
             <tr>
-                <td><?= $this->Number->format($clientRdPayment->id) ?></td>
-                <td><?= $clientRdPayment->has('client_rd') ? $this->Html->link($clientRdPayment->client_rd->id, ['controller' => 'ClientRd', 'action' => 'view', $clientRdPayment->client_rd->id]) : '' ?></td>
-                <td><?= $this->Number->format($clientRdPayment->installment_received) ?></td>
-                <td><?= $this->Number->format($clientRdPayment->final_rd_amount) ?></td>
+                <td><?= $count; ?></td>
+                <td><?= $clientRdPayment->has('client_rd') ? $this->Html->link("More Information", ['controller' => 'ClientRd', 'action' => 'view', $clientRdPayment->client_rd->id]) : '' ?></td>
+                <td><?= $this->Html->link($clientRdInfo[$clientRdPayment->client_rd_id], ['controller' => 'ClientDetails', 'action' => 'view', $clientRdData[$clientRdPayment->client_rd_id]]); ?></td>
+                <td><?= $this->Number->currency($clientRdPayment->installment_received) ?></td>
+<!--                <td>--><?php //$this->Number->format($clientRdPayment->final_rd_amount) ?><!--</td>-->
                 <td><?= $this->Number->format($clientRdPayment->penalty) ?></td>
                 <td><?= h($clientRdPayment->created_date) ?></td>
-                <td><?= h($clientRdPayment->modified_date) ?></td>
+<!--                <td>--><?php //h($clientRdPayment->modified_date) ?><!--</td>-->
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $clientRdPayment->id]) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $clientRdPayment->id]) ?>
@@ -45,14 +48,31 @@
             <?php endforeach; ?>
         </tbody>
     </table>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
-    </div>
 </div>
+<script>
+    $('#clientRdPaymentTable').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+//            'copy',
+//            'csv',
+            'excel',
+            'pdf',
+            'print',
+            'colvis'
+        ],
+        responsive: true,
+        //keys: true,
+        //autoFill: true,
+        "pagingType": "first_last_numbers"
+//        columnDefs: [ {
+//            orderable: false,
+//            className: 'select-checkbox',
+//            targets:   0
+//        } ],
+//        select: {
+//            style:    'os',
+//            selector: 'td:first-child'
+//        },
+//        order: [[ 1, 'asc' ]]
+    });
+</script>

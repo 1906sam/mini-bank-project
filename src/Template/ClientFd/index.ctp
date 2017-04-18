@@ -3,41 +3,46 @@
   * @var \App\View\AppView $this
   */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('New Client Fd'), ['action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Client Details'), ['controller' => 'ClientDetails', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Client Detail'), ['controller' => 'ClientDetails', 'action' => 'add']) ?></li>
-    </ul>
-</nav>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/pdfmake-0.1.18/dt-1.10.13/af-2.1.3/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/b-print-1.2.4/kt-2.2.0/r-2.1.1/se-1.2.0/datatables.min.css"/>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/pdfmake-0.1.18/dt-1.10.13/af-2.1.3/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/b-print-1.2.4/kt-2.2.0/r-2.1.1/se-1.2.0/datatables.min.js"></script>
+
 <div class="clientFd index large-9 medium-8 columns content">
-    <h3><?= __('Client Fd') ?></h3>
-    <table cellpadding="0" cellspacing="0">
+    <h1 style="text-align: center; text-decoration: underline"><?= __('Client\'s FD') ?></h1>
+    <table id="clientFdTable" class="table table-striped table-bordered table-hover table-condensed dt-responsive nowrap" cellspacing="0"  width="100%">
         <thead>
             <tr>
-                <th scope="col"><?= $this->Paginator->sort('id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('client_id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('fd_amount') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('time_duration') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('rate_of_interest') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('status') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('created_date') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('modified_date') ?></th>
-                <th scope="col" class="actions"><?= __('Actions') ?></th>
+                <th>S.No.</th>
+                <th>Client Information</th>
+                <th>FD Amount</th>
+                <th>Time Duration</th>
+                <th>Rate Of Interest</th>
+                <th>Status</th>
+                <th>Created Date</th>
+<!--                <th>Modified Date</th>-->
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($clientFd as $clientFd): ?>
-            <tr>
-                <td><?= $this->Number->format($clientFd->id) ?></td>
-                <td><?= $clientFd->has('client_detail') ? $this->Html->link($clientFd->client_detail->id, ['controller' => 'ClientDetails', 'action' => 'view', $clientFd->client_detail->id]) : '' ?></td>
-                <td><?= $this->Number->format($clientFd->fd_amount) ?></td>
+            <?php $count = 0; $class = "";
+                foreach ($clientFd as $clientFd):
+                    $count++;
+                    if($count %2 == 0)
+                        $class = "";
+                    else
+                        //$class = "success";
+            ?>
+                    <tr>
+                <td><?= $this->Number->format($count) ?></td>
+                <td>
+                    <img src="<?= h($clientFd->client_detail->client_photo) ?>" width="80" height="80"><br>
+                    <?= $clientFd->has('client_detail') ? $this->Html->link($clientFd->client_detail->client_name, ['controller' => 'ClientDetails', 'action' => 'view', $clientFd->client_detail->id]) : '' ?>
+                </td>
+                <td><?= $this->Number->currency($clientFd->fd_amount) ?></td>
                 <td><?= $this->Number->format($clientFd->time_duration) ?></td>
-                <td><?= $this->Number->format($clientFd->rate_of_interest) ?></td>
+                <td><?= $this->Number->toPercentage($clientFd->rate_of_interest) ?></td>
                 <td><?= $this->Number->format($clientFd->status) ?></td>
                 <td><?= h($clientFd->created_date) ?></td>
-                <td><?= h($clientFd->modified_date) ?></td>
+<!--                <td>--><?php // h($clientFd->modified_date) ?><!--</td>-->
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $clientFd->id]) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $clientFd->id]) ?>
@@ -47,14 +52,31 @@
             <?php endforeach; ?>
         </tbody>
     </table>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
-    </div>
 </div>
+<script>
+    $('#clientFdTable').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+//            'copy',
+//            'csv',
+            'excel',
+            'pdf',
+            'print',
+            'colvis'
+        ],
+        responsive: true,
+        //keys: true,
+        //autoFill: true,
+        "pagingType": "first_last_numbers"
+//        columnDefs: [ {
+//            orderable: false,
+//            className: 'select-checkbox',
+//            targets:   0
+//        } ],
+//        select: {
+//            style:    'os',
+//            selector: 'td:first-child'
+//        },
+//        order: [[ 1, 'asc' ]]
+    });
+</script>

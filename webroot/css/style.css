@@ -1,0 +1,113 @@
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+caption{
+    text-align: center;
+    color: black;
+    font-size: 16px;
+    font-weight: 600;
+    background: skyblue;
+}
+td, th {
+    border: 1px solid #999;
+    text-align: left;
+    text-transform: capitalize;
+    padding: 2px !important;
+}
+
+tr:nth-child(even) {
+    background-color: rgba(0, 192, 239, 0.07);
+}
+.table-hover>tbody>tr:hover:nth-of-type(even){
+    background-color: rgba(0, 192, 239, 0.07) !important;
+}
+.tableui{
+    margin: 0 auto;
+    padding: 0px;
+}
+.tableui thead{
+    padding: 5px;
+}
+.tableimg{
+    border: 1px double rgba(128, 128, 128, 0.63);
+    padding: 5px;
+    width: 170px;
+    margin-left: 30px;
+}
+.h1, h1 {
+    font-size: 28px !important;
+    text-decoration: none !important;
+    text-transform: uppercase;
+}
+.form-group {
+    margin: 0 auto;
+    float: none;
+    width: 50%;
+}
+label {
+    margin-top: 10px;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-family: sans-serif;
+}
+.form-control {
+    height: 40px;
+}
+.btn-success{
+    margin-left: 25%;
+    margin-top: 20px;
+    border-radius: 0px !important;
+    height: 45px;
+    text-transform: uppercase;
+    font-size: 16px;
+    background: #222d32 !important;
+    border: 1px solid #222d32 !important;
+    padding: 10px 20px;
+}
+.form-group select{
+    margin: 0px;
+}
+.form-group .form-inline{
+    margin-left: 10px;
+}
+.datetime {
+    margin-top: 10px;
+}
+select {
+    height: 40px;
+    width: 13%;
+    margin: 8px;
+}
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 320px) and (max-device-width : 1023px) {
+    .tableimg{
+        margin: 20px auto;
+    }
+    .form-group {
+        width: 100% ;
+    }
+    .btn{
+        margin-left:0%;
+    }
+    select {
+        width:auto;
+        margin: 10px 3px 0px;
+    }
+}
+/* iPads (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 498px) and (max-device-width : 1024px) {
+
+
+}
+
+#clientName
+{
+    margin-top: 2px;
+    margin-left: 38px;
+    text-decoration: black;
+    font-weight: bold;
+    font-size: 22px;
+    text-align: left;
+}

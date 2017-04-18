@@ -20,27 +20,38 @@ if (file_exists($file)) {
     </li>
     <li class="treeview">
         <a href="#">
-            <i class="fa fa-files-o"></i>
-            <span>Investment panel</span>
-            <span class="label label-primary pull-right">3</span>
+            <i class="fa fa-inr"></i>
+            <span>RD panel</span>
+            <span class="label label-primary pull-right">4</span>
         </a>
         <ul class="treeview-menu">
-            <li><a href="<?php echo $this->Url->build('/pages/layout/top-nav'); ?>"><i class="fa fa-circle-o"></i> Add new user</a></li>
-            <li><a href="<?php echo $this->Url->build('/pages/layout/boxed'); ?>"><i class="fa fa-circle-o"></i> View users details</a></li>
-            <li><a href="<?php echo $this->Url->build('/pages/layout/fixed'); ?>"><i class="fa fa-circle-o"></i> Make payment</a></li>
+            <li><a href="<?php echo $this->Url->build('/addClients'); ?>"><i class="fa fa-circle-o"></i> Add new user</a></li>
+            <li><a href="<?php echo $this->Url->build('/viewClients'); ?>"><i class="fa fa-circle-o"></i> View users details</a></li>
+            <li><a href="<?php echo $this->Url->build('/viewRdInformation'); ?>"><i class="fa fa-circle-o"></i> View RD's</a></li>
+            <li><a href="<?php echo $this->Url->build('/viewRdPayment'); ?>"><i class="fa fa-circle-o"></i> View RD Payments</a></li>
         </ul>
     </li>
     <li class="treeview">
         <a href="#">
-            <i class="fa fa-files-o"></i>
+            <i class="fa fa-thumbs-up"></i>
+            <span>FD panel</span>
+            <span class="label bg-green pull-right">2</span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="<?php echo $this->Url->build('/addFd'); ?>"><i class="fa fa-circle-o"></i> Add FD</a></li>
+            <li><a href="<?php echo $this->Url->build('/viewFdInformation'); ?>"><i class="fa fa-circle-o"></i> View FD's</a></li>
+        </ul>
+    </li>
+    <li class="treeview">
+        <a href="#">
+            <i class="fa fa-chevron-right"></i>
             <span>Loan panel</span>
             <span class="label bg-red pull-right">3</span>
         </a>
         <ul class="treeview-menu">
-            <li><a href="<?php echo $this->Url->build('/pages/layout/top-nav'); ?>"><i class="fa fa-circle-o"></i> Add new user</a></li>
-            <li><a href="<?php echo $this->Url->build('/pages/layout/boxed'); ?>"><i class="fa fa-circle-o"></i> View users details</a></li>
-            <li><a href="<?php echo $this->Url->build('/pages/layout/fixed'); ?>"><i class="fa fa-circle-o"></i> Make payment</a></li>
-        </ul>
+            <li><a href="<?php echo $this->Url->build('/addLoan'); ?>"><i class="fa fa-circle-o"></i> Add Loan</a></li>
+            <li><a href="<?php echo $this->Url->build('/viewLoanInformation'); ?>"><i class="fa fa-circle-o"></i> View Loan details</a></li>
+            <li><a href="<?php echo $this->Url->build('/viewLoanPayment'); ?>"><i class="fa fa-circle-o"></i> View Loan payments</a></li>        </ul>
     </li>
 <!--    <li class="treeview">-->
 <!--        <a href="#">-->

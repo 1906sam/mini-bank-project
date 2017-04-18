@@ -49,22 +49,45 @@ class ClientFdController extends AppController
      *
      * @return \Cake\Network\Response|null Redirects on successful add, renders view otherwise.
      */
+//    public function add()
+//    {
+//        $clientFd = $this->ClientFd->newEntity();
+//        if ($this->request->is('post')) {
+//            $clientFd = $this->ClientFd->patchEntity($clientFd, $this->request->data);
+//            if ($this->ClientFd->save($clientFd)) {
+//                $this->Flash->success(__('The client fd has been saved.'));
+//
+//                return $this->redirect(['action' => 'index']);
+//            }
+//            $this->Flash->error(__('The client fd could not be saved. Please, try again.'));
+//        }
+//        $clientDetails = $this->ClientFd->ClientDetails->find('list', ['limit' => 200]);
+//        $this->set(compact('clientFd', 'clientDetails'));
+//        $this->set('_serialize', ['clientFd']);
+//    }
     public function add()
     {
         $clientFd = $this->ClientFd->newEntity();
         if ($this->request->is('post')) {
-            $clientFd = $this->ClientFd->patchEntity($clientFd, $this->request->data);
-            if ($this->ClientFd->save($clientFd)) {
-                $this->Flash->success(__('The client fd has been saved.'));
+                $clientFd = $this->ClientFd->patchEntity($clientFd, $this->request->data);
+                if ($this->ClientFd->save($clientFd)) {
+                    $this->Flash->success(__('The client\'s FD has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The client fd could not be saved. Please, try again.'));
+                    return $this->redirect('/viewFdInformation');
+                }
+                $this->Flash->error(__('The client\'s FD could not be saved. Please, try again.'));
         }
-        $clientDetails = $this->ClientFd->ClientDetails->find('list', ['limit' => 200]);
-        $this->set(compact('clientFd', 'clientDetails'));
-        $this->set('_serialize', ['clientFd']);
+        $clientDetails = $this->ClientFd->ClientDetails->find('list', [
+            'limit' => 200,
+            'keyField' => 'id',
+            'valueField' => 'client_name'
+        ])->toArray();
+
+        $this->set('clientDetails',$clientDetails);
+        $this->set('clientFd',$clientFd);
+        $this->set('_serialize', ['clientFd','clientDetails']);
     }
+
 
     /**
      * Edit method

@@ -49,19 +49,25 @@ class ClientRdController extends AppController
      *
      * @return \Cake\Network\Response|null Redirects on successful add, renders view otherwise.
      */
-    public function add()
+    public function add($id = null)
     {
         $clientRd = $this->ClientRd->newEntity();
         if ($this->request->is('post')) {
             $clientRd = $this->ClientRd->patchEntity($clientRd, $this->request->data);
             if ($this->ClientRd->save($clientRd)) {
-                $this->Flash->success(__('The client rd has been saved.'));
+                $this->Flash->success(__('The client\'s RD details has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect('/viewRdInformation');
             }
-            $this->Flash->error(__('The client rd could not be saved. Please, try again.'));
+            $this->Flash->error(__('The client\'s RD details could not be saved. Please, try again.'));
         }
-        $clientDetails = $this->ClientRd->ClientDetails->find('list', ['limit' => 200]);
+        $clientDetails = $this->ClientRd->ClientDetails->find('list', [
+            'limit' => 200,
+            'keyField' => 'id',
+            'valueField' => 'client_name',
+            'conditions' => ['id' => $id]
+        ]);
+        $this->set('id', $id);
         $this->set(compact('clientRd', 'clientDetails'));
         $this->set('_serialize', ['clientRd']);
     }

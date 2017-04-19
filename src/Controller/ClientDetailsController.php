@@ -178,11 +178,19 @@ class ClientDetailsController extends AppController
         ]);
 
         $clientRdModel = $this->loadModel('ClientRd');
+        $clientRdPaymentModel = $this->loadModel('ClientRdPayments');
         $clientRdData = $clientRdModel->find('all',[
             'conditions' => ['client_id' => $id]
-        ]);
+        ])->toArray();
 
-        $this->set('clientDetail', $clientDetail);
+        $clientRdPaymentData = $clientRdPaymentModel->find('all',[
+            'conditions' => ['client_rd_id' => $clientRdData[0]['id']]
+        ])->toArray();
+        
+//        debug($clientRdPaymentData);
+//        debug($clientRdData[0]['rd_amount']);
+
+        $this->set(compact('clientDetail','clientRdData','clientRdPaymentData'));
         $this->set('_serialize', ['clientDetail']);
     }
 

@@ -9,7 +9,7 @@
 
 <div class="clientDetails index large-9 medium-8 columns content">
     <h1 style="text-align: center; text-decoration: underline"><?= __('Client Details') ?></h1>
-    <table id="clientDetailsTable" class="table table-striped table-bordered table-hover table-condensed dt-responsive nowrap" cellspacing="0"  width="100%">
+    <table id="clientDetailsTable" class="table table-striped table-bordered table-condensed dt-responsive nowrap" cellspacing="0"  width="100%">
         <thead>
             <tr>
                 <th></th>

@@ -14,7 +14,7 @@ td, th {
     border: 1px solid #999;
     text-align: left;
     text-transform: capitalize;
-    padding: 2px !important;
+    padding: 7px !important;
 }
 
 tr:nth-child(even) {
@@ -80,6 +80,9 @@ select {
     width: 13%;
     margin: 8px;
 }
+.tablemarg{
+	margin: 10px !important;
+	}
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width : 320px) and (max-device-width : 1023px) {
     .tableimg{
@@ -95,13 +98,30 @@ select {
         width:auto;
         margin: 10px 3px 0px;
     }
+	
 }
 /* iPads (portrait and landscape) ----------- */
-@media only screen and (min-device-width : 498px) and (max-device-width : 1024px) {
-
+@media only screen and (min-device-width : 320px) and (max-device-width : 579px) {
+	#clientName
+	{
+    margin-left: 90px !important;
+	}
 
 }
+@media only screen and (min-device-width : 580px) and (max-device-width : 727px) {
+	#clientName
+	{
+    margin-left: 200px !important;
+	}
 
+}
+@media only screen and (min-device-width : 728px) and (max-device-width : 1023px) {
+	#clientName
+	{
+    margin-left: 175px !important;
+	}
+
+}
 #clientName
 {
     margin-top: 2px;
@@ -109,5 +129,4 @@ select {
     text-decoration: black;
     font-weight: bold;
     font-size: 22px;
-    text-align: left;
 }

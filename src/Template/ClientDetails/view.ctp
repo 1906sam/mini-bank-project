@@ -16,8 +16,8 @@
                 <tbody>
                 <caption >Personal Details</caption>
                 <tr>
-                    <th class="col-lg-2" scope="row"><?= __('Id') ?></th>
-                    <td class="col-lg-4"><?= $this->Number->format($clientDetail->id) ?></td>
+                    <th class="col-lg-3" scope="row"><?= __('Id') ?></th>
+                    <td class="col-lg-3"><?= $this->Number->format($clientDetail->id) ?></td>
                 </tr>
 <!--                <tr>-->
 <!--                    <th scope="row">--><?php // __('Client Name') ?><!--</th>-->
@@ -57,13 +57,13 @@
     </div>
     <div class="row">
         <!-- for left side table -->
-        <div class="tableui col-md-6" align="left">
+        <div class="tablemarg tableui col-md-6" >
             <table class="table table-responsive table-striped">
                 <tbody>
                 <caption >RD Details</caption>
                 <tr>
-                    <th class="col-lg-2" scope="row"><?= __('Id') ?></th>
-                    <td class="col-lg-4"><?= $this->Number->format($clientRdData[0]['id']) ?></td>
+                    <th class="col-lg-3" scope="row"><?= __('Id') ?></th>
+                    <td class="col-lg-3"><?= $this->Number->format($clientRdData[0]['id']) ?></td>
                 </tr>
                 <tr>
                     <th scope="row"><?= __('RD Amount') ?></th>
@@ -95,13 +95,13 @@
         </div>
 
         <!-- for right side table -->
-        <div class="tableui col-md-6" align="right">
+        <div class="tablemarg tableui col-md-5" >
             <table class="table table-responsive table-striped">
                 <tbody>
                 <caption >RD Details</caption>
                 <tr>
-                    <th class="col-lg-2" scope="row"><?= __('Total Amount Invested') ?></th>
-                    <td class="col-lg-4">
+                    <th class="col-lg-3" scope="row"><?= __('Total Amount Invested') ?></th>
+                    <td class="col-lg-3">
                         <?php
                             $totalInvestment = 0;
                             foreach ($clientRdPaymentData as $data)

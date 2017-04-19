@@ -56,5 +56,88 @@
         </div>
     </div>
     <div class="row">
+        <!-- for left side table -->
+        <div class="tableui col-md-6" align="left">
+            <table class="table table-responsive table-striped">
+                <tbody>
+                <caption >RD Details</caption>
+                <tr>
+                    <th class="col-lg-2" scope="row"><?= __('Id') ?></th>
+                    <td class="col-lg-4"><?= $this->Number->format($clientRdData[0]['id']) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= __('RD Amount') ?></th>
+                    <td><?= $this->Number->currency($clientRdData[0]['rd_amount']) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= __('Rate of Interest') ?></th>
+                    <td><?= $this->Number->toPercentage($clientRdData[0]['rate_of_interest']) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= __('Time Duration') ?></th>
+                    <td><?= h($clientRdData[0]['time_duration'])." years" ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= __('Status') ?></th>
+                    <td><?php
+                            if($clientRdData[0]['status'] == 0)
+                                echo 'Running';
+                            else
+                                echo 'Closed';
+                        ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= __('Created Date') ?></th>
+                    <td><?= h($clientDetail->created_date) ?></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- for right side table -->
+        <div class="tableui col-md-6" align="right">
+            <table class="table table-responsive table-striped">
+                <tbody>
+                <caption >RD Details</caption>
+                <tr>
+                    <th class="col-lg-2" scope="row"><?= __('Total Amount Invested') ?></th>
+                    <td class="col-lg-4">
+                        <?php
+                            $totalInvestment = 0;
+                            foreach ($clientRdPaymentData as $data)
+                            {
+                                $totalInvestment += $data['installment_received'];
+                            }
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= __('RD Amount') ?></th>
+                    <td><?= $this->Number->currency($clientRdData[0]['rd_amount']) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= __('Rate of Interest') ?></th>
+                    <td><?= $this->Number->toPercentage($clientRdData[0]['rate_of_interest']) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= __('Time Duration') ?></th>
+                    <td><?= h($clientRdData[0]['time_duration'])." years" ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= __('Status') ?></th>
+                    <td><?php
+                        if($clientRdData[0]['status'] == 0)
+                            echo 'Running';
+                        else
+                            echo 'Closed';
+                        ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= __('Created Date') ?></th>
+                    <td><?= h($clientDetail->created_date) ?></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

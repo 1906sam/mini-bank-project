@@ -93,7 +93,12 @@ class ClientRdController extends AppController
             }
             $this->Flash->error(__('The client rd could not be saved. Please, try again.'));
         }
-        $clientDetails = $this->ClientRd->ClientDetails->find('list', ['limit' => 200]);
+        $clientDetails = $this->ClientRd->ClientDetails->find('list', [
+            'limit' => 200,
+            'keyField' => 'id',
+            'valueField' => 'client_name',
+            'conditions' => ['id' => $clientRd->client_id]
+        ]);
         $this->set(compact('clientRd', 'clientDetails'));
         $this->set('_serialize', ['clientRd']);
     }

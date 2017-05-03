@@ -40,14 +40,14 @@
                 <td><?= $this->Number->currency($clientRd->rd_amount) ?></td>
                 <td><?= $this->Number->toPercentage($clientRd->rate_of_interest) ?></td>
                 <td><?= $this->Number->format($clientRd->time_duration) ?></td>
-                <td><?= $this->Number->format($clientRd->status) ?></td>
-                <td><?= h($clientRd->created_date) ?></td>
+                <td><?= $status = ($clientRd->status == 0) ? 'Running' : 'Complete'; ?></td>
+                <td><?= h($clientRd->created_date->nice()) ?></td>
 <!--                <td>--><?php //$this->Number->format($clientRd->modified_date) ?><!--</td>-->
                 <td class="actions">
 <!--                    --><?php //$this->Html->link(__('View'), ['action' => 'view', $clientRd->id]) ?>
-                    <?= $this->Html->link(__('Add payment'), ['controller' => 'ClientRdPayments','action' => 'add', $clientRd->client_detail->id]) ?>
+                    <?= $this->Html->link(__('Add payment'), ['controller' => 'ClientRdPayments','action' => 'add', $clientRd->client_detail->id]) ?> |
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $clientRd->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $clientRd->id], ['confirm' => __('Are you sure you want to delete # {0}?', $clientRd->id)]) ?>
+                    <?php //echo $this->Form->postLink(__('Delete'), ['action' => 'delete', $clientRd->id], ['confirm' => __('Are you sure you want to delete # {0}?', $clientRd->id)]) ?>
                 </td>
             </tr>
             <?php endforeach; ?>

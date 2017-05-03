@@ -9,7 +9,7 @@ use Cake\Validation\Validator;
 /**
  * Batches Model
  *
- * @property \Cake\ORM\Association\BelongsTo $ClientDetails
+ * @property \Cake\ORM\Association\HasMany $BatchUser
  *
  * @method \App\Model\Entity\Batch get($primaryKey, $options = [])
  * @method \App\Model\Entity\Batch newEntity($data = null, array $options = [])
@@ -36,9 +36,8 @@ class BatchesTable extends Table
         $this->displayField('id');
         $this->primaryKey('id');
 
-        $this->belongsTo('ClientDetails', [
-            'foreignKey' => 'client_id',
-            'joinType' => 'INNER'
+        $this->hasMany('BatchUser', [
+            'foreignKey' => 'batch_id'
         ]);
     }
 
@@ -55,7 +54,6 @@ class BatchesTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->integer('batch_name')
             ->requirePresence('batch_name', 'create')
             ->notEmpty('batch_name');
 
@@ -73,19 +71,5 @@ class BatchesTable extends Table
             ->allowEmpty('modified_date');
 
         return $validator;
-    }
-
-    /**
-     * Returns a rules checker object that will be used for validating
-     * application integrity.
-     *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
-     */
-    public function buildRules(RulesChecker $rules)
-    {
-        $rules->add($rules->existsIn(['client_id'], 'ClientDetails'));
-
-        return $rules;
     }
 }

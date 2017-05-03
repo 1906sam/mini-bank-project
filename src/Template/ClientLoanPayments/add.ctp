@@ -8,8 +8,17 @@
     <fieldset>
         <legend><?= __('Add Client Loan Payment') ?></legend>
         <?php
+            $interestValue = null;
             echo $this->Form->input('client_loan_id', ['options' => $clientLoanInfo,'label' => 'Client name: ']);
-            echo $this->Form->input('interest_received',['id' => 'interestReceived','label' => 'Interest Received (Rs.)']);
+            if(empty($loanAfterwards))
+            {
+                $interestValue = $loanDataOriginal['loan_amount'] * ($loanDataOriginal['rate_of_interest']/100);
+            }
+            else
+            {
+                $interestValue = $loanAfterwards[0]['final_loan_amount'] * ($loanDataOriginal['rate_of_interest']/100);
+            }
+            echo $this->Form->input('interest_received',['value' => ceil($interestValue),'id' => 'interestReceived','label' => 'Interest Received (Rs.)']);
             echo $this->Form->input('installment_received',['id' => 'installmentReceived','label' => 'Installment Received (Rs.)']);
 //            echo $this->Form->label('final_loan_amount',['label' => 'Loan amount (Rs.): ','text' => $loan_amount]);
             echo $this->Form->input('created_date',['value' => date("Y-m-d H:i:s"),'type' => 'hidden']);

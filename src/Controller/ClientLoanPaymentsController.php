@@ -84,16 +84,15 @@ class ClientLoanPaymentsController extends AppController
 
         $loanDataOriginal = $clientLoan->get(array_search($id,$clientLoanData));
         $loanAfterwards = $clientLoanPaymentInstance->find('all',[
-            'fields' => ['final_loan_amount'],
-            'controller' => ['client_loan_id' => $loanDataOriginal['id']],
+            'conditions' => ['client_loan_id' => $loanDataOriginal['id']],
             'order' => ['created_date' => 'desc']
-        ])->first();
-
+        ])->toArray();
+        
         if ($this->request->is('post')) {
             if(empty($loanAfterwards))
                 $this->request->data['final_loan_amount'] = ($loanDataOriginal['loan_amount'] - $_POST['installment_received'] - $_POST['interest_received']);
             else
-                $this->request->data['final_loan_amount'] = ($loanAfterwards['final_loan_amount'] - $_POST['installment_received'] - $_POST['interest_received']);
+                $this->request->data['final_loan_amount'] = ($loanAfterwards[0]['final_loan_amount'] - $_POST['installment_received'] - $_POST['interest_received']);
 
             $clientLoanPayment = $this->ClientLoanPayments->patchEntity($clientLoanPayment, $this->request->data);
             if ($this->ClientLoanPayments->save($clientLoanPayment)) {
@@ -107,8 +106,8 @@ class ClientLoanPaymentsController extends AppController
             array_search($id,$clientLoanData) => $clientData['client_name']
         );
 
-        $this->set('loan_amount',$loanDataOriginal['loan_amount']);
-        $this->set(compact('clientLoanPayment', 'clientLoanInfo'));
+        $this->set('loanDataOriginal',$loanDataOriginal);
+        $this->set(compact('clientLoanPayment', 'clientLoanInfo','loanAfterwards'));
         $this->set('_serialize', ['clientLoanPayment']);
     }
 

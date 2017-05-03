@@ -93,11 +93,11 @@ class ClientDetailsController extends AppController
                 chmod("./img/".$uniVal."/". $signatureName, 0777);
         }
 
-        if($this->request->is('post'))
+        if($this->request->is(['patch', 'post', 'put']))
         {
             try
             {
-                $this->ClientDetails->updateAll(
+                $status = $this->ClientDetails->updateAll(
                     [
                         'client_photo' => "/img/".$uniVal."/".$photoName,
                         'client_sign_photo' => "/img/".$uniVal."/".$signatureName
@@ -106,12 +106,13 @@ class ClientDetailsController extends AppController
                         'id' => $clientId
                     ]
                 );
-                $this->redirect("/addRd/".$clientId);
+                if($this->request->is('post'))
+                    $this->redirect("/addRd/".$clientId);
             }
             catch (\Exception $e)
             {
                 $this->Flash->error($e->getMessage());
-                $this->redirect("/addClients");
+                //$this->redirect("/addClients");
             }
         }
     }
@@ -123,10 +124,6 @@ class ClientDetailsController extends AppController
      */
     public function add()
     {
-//        debug($_POST);
-//        debug($_FILES);
-        //$this->upload($_FILES);
-//        die();
         $clientDetail = $this->ClientDetails->newEntity();
         if ($this->request->is('post')) {
             $clientDetail = $this->ClientDetails->patchEntity($clientDetail, $this->request->data);
@@ -160,7 +157,9 @@ class ClientDetailsController extends AppController
     {
         $clientDetails = $this->paginate($this->ClientDetails);
 
-        $this->set(compact('clientDetails'));
+        $batchModel = $this->loadModel('Batches');
+        $batchData = $batchModel->newEntity();
+        $this->set(compact('clientDetails','batchData'));
         $this->set('_serialize', ['clientDetails']);
     }
 
@@ -179,6 +178,10 @@ class ClientDetailsController extends AppController
 
         $clientRdModel = $this->loadModel('ClientRd');
         $clientRdPaymentModel = $this->loadModel('ClientRdPayments');
+        $clientFd = $this->loadModel('ClientFd');
+        $clientLoan = $this->loadModel('ClientLoan');
+        $clientLoanPaymentModel = $this->loadModel('ClientLoanPayments');
+
         $clientRdData = $clientRdModel->find('all',[
             'conditions' => ['client_id' => $id]
         ])->toArray();
@@ -186,11 +189,20 @@ class ClientDetailsController extends AppController
         $clientRdPaymentData = $clientRdPaymentModel->find('all',[
             'conditions' => ['client_rd_id' => $clientRdData[0]['id']]
         ])->toArray();
-        
-//        debug($clientRdPaymentData);
-//        debug($clientRdData[0]['rd_amount']);
 
-        $this->set(compact('clientDetail','clientRdData','clientRdPaymentData'));
+        $clientFdData= $clientFd->find('all',[
+            'conditions' => ['client_id' => $id]
+        ])->toArray();
+
+        $clientLoanData = $clientLoan->find('all',[
+            'conditions' => ['client_id' => $id]
+        ])->toArray();
+
+        $clientLoanPaymentData = $clientLoanPaymentModel->find('all',[
+            'conditions' => ['client_loan_id' => $clientLoanData[0]['id']]
+        ])->toArray();
+
+        $this->set(compact('clientDetail','clientRdData','clientRdPaymentData','clientFdData','clientLoanData','clientLoanPaymentData'));
         $this->set('_serialize', ['clientDetail']);
     }
 
@@ -209,11 +221,16 @@ class ClientDetailsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $clientDetail = $this->ClientDetails->patchEntity($clientDetail, $this->request->data);
             if ($this->ClientDetails->save($clientDetail)) {
+                $uniqueUserData = str_replace(" ","_",$_POST['client_name'].$id);
+                $this->upload($id,$uniqueUserData,$_FILES);
                 $this->Flash->success(__('The client detail has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The client detail could not be saved. Please, try again.'));
+            else
+            {
+                $this->Flash->error(__('The client detail could not be saved. Please, try again.'));
+            }
         }
         $this->set(compact('clientDetail'));
         $this->set('_serialize', ['clientDetail']);

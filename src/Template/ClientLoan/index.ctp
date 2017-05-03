@@ -39,8 +39,8 @@
                 </td>
                 <td><?= $this->Number->toPercentage($clientLoan->rate_of_interest) ?></td>
                 <td><?= $this->Number->currency($clientLoan->loan_amount) ?></td>
-                <td><?= $this->Number->format($clientLoan->status) ?></td>
-                <td><?= h($clientLoan->created_date) ?></td>
+                <td><?= $status = ($clientLoan->status == 0) ? 'Running' : 'Complete'; ?></td>
+                <td><?= h($clientLoan->created_date->nice()) ?></td>
 <!--                <td>--><?php //h($clientLoan->modified_date) ?><!--</td>-->
                 <td class="actions">
                     <?= $this->Html->link(__('Add Payment'), ['controller' => 'ClientLoanPayments','action' => 'add', $clientLoan->client_detail->id]) ?>

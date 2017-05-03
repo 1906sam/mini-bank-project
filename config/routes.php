@@ -49,7 +49,7 @@ Router::scope('/', function (RouteBuilder $routes) {
      * its action called 'display', and we pass a param to select the view file
      * to use (in this case, src/Template/Pages/home.ctp)...
      */
-    $routes->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
+    $routes->connect('/', ['controller' => 'admin', 'action' => 'dashboard', 'home']);
     $routes->connect('/addClients',['controller' => 'ClientDetails','action' => 'add']);
     $routes->connect('/viewClients',['controller' => 'ClientDetails','action' => 'index']);
     $routes->connect('/addRd/*',['controller' => 'ClientRd','action' => 'add']);
@@ -61,6 +61,9 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/viewLoanInformation',['controller' => 'ClientLoan','action' => 'index']);
     $routes->connect('/viewRdPayment',['controller' => 'ClientRdPayments','action' => 'index']);
     $routes->connect('/viewLoanPayment',['controller' => 'ClientLoanPayments','action' => 'index']);
+    $routes->connect('/viewBatches',['controller' => 'Batches','action' => 'index']);
+    $routes->connect('/viewBatchUsers',['controller' => 'BatcheUser','action' => 'index']);
+
     /**
      * ...and connect the rest of 'Pages' controller's URLs.
      */

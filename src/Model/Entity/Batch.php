@@ -7,13 +7,12 @@ use Cake\ORM\Entity;
  * Batch Entity
  *
  * @property int $id
- * @property int $client_id
- * @property int $batch_name
+ * @property string $batch_name
  * @property int $status
  * @property \Cake\I18n\Time $created_date
  * @property \Cake\I18n\Time $modified_date
  *
- * @property \App\Model\Entity\ClientDetail $client_detail
+ * @property \App\Model\Entity\BatchUser[] $batch_user
  */
 class Batch extends Entity
 {

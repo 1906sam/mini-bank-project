@@ -40,8 +40,8 @@
                 <td><?= $this->Number->currency($clientFd->fd_amount) ?></td>
                 <td><?= $this->Number->format($clientFd->time_duration) ?></td>
                 <td><?= $this->Number->toPercentage($clientFd->rate_of_interest) ?></td>
-                <td><?= $this->Number->format($clientFd->status) ?></td>
-                <td><?= h($clientFd->created_date) ?></td>
+                <td><?= $status = ($clientFd->status == 0) ? 'Running' : 'Complete'; ?></td>
+                <td><?= h($clientFd->created_date->nice()) ?></td>
 <!--                <td>--><?php // h($clientFd->modified_date) ?><!--</td>-->
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $clientFd->id]) ?>

@@ -53,7 +53,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <link rel="stylesheet" href="http://localhost/Bank_project/css/style.css">
+
+    <?php if($_SERVER['HTTP_HOST'] == 'localhost') { ?>
+        <link rel="stylesheet" href="http://localhost/Bank_project/css/style.css">
+    <?php } else { ?>
+        <link rel="stylesheet" href="http://bnkprj.dev/css/style.css">
+    <?php } ?>
     <!--  for jquery ui  -->
     <?php if($_SERVER['REQUEST_URI'] == '/addFd' || $_SERVER['REQUEST_URI'] == '/addLoan') { ?>
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>

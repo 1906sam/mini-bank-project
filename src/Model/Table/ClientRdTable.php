@@ -84,7 +84,7 @@ class ClientRdTable extends Table
             ->notEmpty('created_date');
 
         $validator
-            ->integer('modified_date')
+            ->dateTime('modified_date')
             ->allowEmpty('modified_date');
 
         return $validator;

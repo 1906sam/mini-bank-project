@@ -37,12 +37,12 @@
                 <td><?= $this->Number->currency($clientRdPayment->installment_received) ?></td>
 <!--                <td>--><?php //$this->Number->format($clientRdPayment->final_rd_amount) ?><!--</td>-->
                 <td><?= $this->Number->format($clientRdPayment->penalty) ?></td>
-                <td><?= h($clientRdPayment->created_date) ?></td>
+                <td><?= h($clientRdPayment->created_date->nice()) ?></td>
 <!--                <td>--><?php //h($clientRdPayment->modified_date) ?><!--</td>-->
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $clientRdPayment->id]) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $clientRdPayment->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $clientRdPayment->id], ['confirm' => __('Are you sure you want to delete # {0}?', $clientRdPayment->id)]) ?>
+                    <?php //echo $this->Form->postLink(__('Delete'), ['action' => 'delete', $clientRdPayment->id], ['confirm' => __('Are you sure you want to delete # {0}?', $clientRdPayment->id)]) ?>
                 </td>
             </tr>
             <?php endforeach; ?>

@@ -9,18 +9,21 @@
 
 <div class="clientDetails index large-9 medium-8 columns content">
     <h1 style="text-align: center; text-decoration: underline"><?= __('Client Details') ?></h1>
-    <input type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myBatchModal" value="Create Batch" onclick="createBatch();"/>
+	<button type="submit" class="btn btn-left btn-success" data-toggle="modal" data-target="#myBatchModal" onclick="createBatch();">
+   <i class="fa fa-plus" aria-hidden="true"></i> Add New Batch
+	</button>
+    <br/>
     <table id="clientDetailsTable" class="table table-striped table-bordered table-condensed dt-responsive nowrap" cellspacing="0"  width="100%">
         <thead>
             <tr>
                 <th></th>
-                <th>S.No.</th>
+                <th>S.No. &nbsp;&nbsp;</th>
                 <th>Client Name</th>
                 <th>Mobile</th>
-                <th>Introducer Person</th>
-                <th>Client photo</th>
-                <th>Client Sign photo</th>
-                <th>Status</th>
+                <th>Introducer Person &nbsp;</th>
+                <th>Client photo &nbsp;</th>
+                <th>Client Sign photo &nbsp;</th>
+                <th>Status &nbsp;&nbsp;</th>
                 <th>Created Date</th>
 <!--                <th >--><?php //$this->Paginator->sort('modified_date') ?><!--</th>-->
                 <th class="actions">Actions</th>

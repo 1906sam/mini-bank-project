@@ -11,12 +11,12 @@
     <table id="clientLoanPaymentTable" class="table table-striped table-bordered table-hover table-condensed dt-responsive nowrap" cellspacing="0"  width="100%">
         <thead>
             <tr>
-                <th>S.No.</th>
-                <th>Client Loan Info</th>
+                <th>S.No. &nbsp;&nbsp;</th>
+                <th>Client Loan Info &nbsp;</th>
                 <th>Client Info</th>
-                <th>Interest Received</th>
-                <th>Installment Received</th>
-                <th>Loan Pending</th>
+                <th>Interest Received &nbsp;</th>
+                <th>Installment Received &nbsp;</th>
+                <th>Loan Pending &nbsp;</th>
                 <th>Payment Date</th>
 <!--                <th>modified_date</th>-->
                 <th>Actions</th>

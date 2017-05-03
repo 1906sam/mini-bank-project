@@ -58,7 +58,11 @@
     <div class="row">
         <!-- for left side table -->
         <?php if(!empty($clientRdData)) { ?>
-            <h3 style="text-align: center;">************************RD Section***************************</h3>
+		<div class="sign-hr">
+			<span class="sign-title">
+				RD Section			
+			</span>
+        </div>
         <div class="tablemarg tableui col-md-6">
             <table class="table table-responsive table-striped">
                 <tbody>
@@ -149,8 +153,12 @@
     </div>
     <div class="row">
         <?php if(!empty($clientFdData)) { ?>
-            <h3 style="text-align: center;">************************FD Section***************************</h3>
-            <div class="tablemarg tableui center col-md-6" >
+		<div class="sign-hr">
+			<span class="sign-title">
+				FD Section			
+			</span>
+        </div>
+            <div class="tablefd tableui center col-md-6" >
                 <table class="table table-responsive table-striped">
                     <tbody>
                     <caption>FD Details</caption>
@@ -194,7 +202,11 @@
     </div>
     <div class="row">
         <?php if(!empty($clientLoanData)) { ?>
-            <h3 style="text-align: center;">************************Loan Section***************************</h3>
+		<div class="sign-hr">
+			<span class="sign-title">
+				Loan Section			
+			</span>
+        </div>
             <div class="tablemarg tableui col-md-5" >
                 <table class="table table-responsive table-striped">
                     <tbody>

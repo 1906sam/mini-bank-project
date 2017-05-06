@@ -8,7 +8,7 @@
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/pdfmake-0.1.18/dt-1.10.13/af-2.1.3/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/b-print-1.2.4/kt-2.2.0/r-2.1.1/se-1.2.0/datatables.min.js"></script>
 
     <div class="batchUser index large-9 medium-8 columns content">
-        <h1 style="text-align: center; text-decoration: underline"><?= __('Batch User Details') ?></h1>
+        <h1 style="text-align: center; text-decoration: underline"><?= __('Batch Users Detail') ?></h1>
         <input type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myBatchModal" value="Make Payments" onclick="createBatch();"/>
         <table id="batchUserTable" class="table table-striped table-bordered table-condensed dt-responsive nowrap" cellspacing="0"  width="100%">
             <thead>
@@ -19,7 +19,7 @@
                 <th>RD Amount</th>
                 <th>Created Date</th>
 <!--                <th>modified_date</th>-->
-                <th>Actions</th>
+<!--                <th>Actions</th>-->
             </tr>
             </thead>
             <tbody>
@@ -32,18 +32,18 @@
                     ?>
                 <tr>
                     <td><?= $count ?></td>
-                    <td><?= $batchUser->has('batch') ? $this->Html->link($batchUser->batch->batch_name, ['controller' => 'Batches', 'action' => 'view', $batchUser->batch->id]) : '' ?></td>
+                    <td><?= h($batchUser->batch->batch_name) ?></td>
                     <td>
                         <img src="<?= h($batchUser->client_detail->client_photo) ?>" width="80" height="80"><br>
                         <?= $batchUser->has('client_detail') ? $this->Html->link($batchUser->client_detail->client_name, ['controller' => 'ClientDetails', 'action' => 'view', $batchUser->client_detail->id]) : '' ?></td>
                     <td><?= $totalAmountRequired[$batchUser->client_detail->id] ?></td>
                     <td><?= $batchUser->created_date->nice(); ?></td>
 <!--                    <td>--><?php ////echo h($batchUser->modified_date) ?><!--</td>-->
-                    <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $batchUser->id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $batchUser->id]) ?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $batchUser->id], ['confirm' => __('Are you sure you want to delete # {0}?', $batchUser->id)]) ?>
-                    </td>
+<!--                    <td class="actions">-->
+                        <?php //echo $this->Html->link(__('View'), ['action' => 'view', $batchUser->id]) ?>
+                        <?php //echo $this->Html->link(__('Edit'), ['action' => 'edit', $batchUser->id]) ?>
+                        <?php //echo $this->Form->postLink(__('Delete'), ['action' => 'delete', $batchUser->id], ['confirm' => __('Are you sure you want to delete # {0}?', $batchUser->id)]) ?>
+<!--                    </td>-->
                 </tr>
             <?php endforeach; ?>
             </tbody>

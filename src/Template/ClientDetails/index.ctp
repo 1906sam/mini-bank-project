@@ -9,11 +9,9 @@
 
 <div class="clientDetails index large-9 medium-8 columns content">
     <h1 style="text-align: center; text-decoration: underline"><?= __('Client Details') ?></h1>
-    <input type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myBatchModal" value="Create Batch" onclick="createBatch();"/>
     <table id="clientDetailsTable" class="table table-striped table-bordered table-condensed dt-responsive nowrap" cellspacing="0"  width="100%">
         <thead>
             <tr>
-                <th></th>
                 <th>S.No.</th>
                 <th>Client Name</th>
                 <th>Mobile</th>
@@ -36,7 +34,6 @@
 
                 ?>
             <tr class="<?= $class; ?>">
-                <td><input type="checkbox" id="<?=  $clientDetail->id; ?>" class="checkbox_check"></td>
                 <td><?= $this->Number->format($count) ?></td>
                 <td><?= h($clientDetail->client_name) ?></td>
                 <td><?= $clientDetail->mobile ?></td>
@@ -46,44 +43,17 @@
                 <td><?php
                     echo $status = ($clientDetail->status == 1)? "Active" : "Not active";
                     ?></td>
-                <td><?= h($clientDetail->created_date->nice()) ?></td>
+                <td data-order="<?= h($clientDetail->created_date->nice()) ?>"><?= h($clientDetail->created_date->nice()) ?></td>
 <!--                <td>--><?php // h($clientDetail->modified_date) ?><!--</td>-->
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $clientDetail->id]) ?> |
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $clientDetail->id]) ?>
-                    <?php //echo $this->Form->postLink(__('Delete'), ['action' => 'delete', $clientDetail->id], ['confirm' => __('Are you sure you want to delete # {0}?', $clientDetail->id)]) ?>
+                    <?= $this->Html->link(__('View'), ['action' => 'view', $clientDetail->id],['target' => '_blank']) ?> |
+                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $clientDetail->id]) ?> |
+                    <?php echo $this->Form->postLink(__('Delete'), ['action' => 'delete', $clientDetail->id], ['confirm' => __('Are you sure you want to delete # {0}?', $clientDetail->id)]) ?>
                 </td>
             </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
-</div>
-<div id="myBatchModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Enter Batch name</h4>
-            </div>
-            <div class="modal-body">
-                <?= $this->Form->create($batchData,['method' => 'POST','id' => 'batchFormId','name' => 'batchNameForm','url' => '/batches/add','class'=>'form']) ?>
-                <?php
-//                    echo $this->Form->input('clientIdArray',['id' => 'clientIdValues','type' => 'hidden']);
-                    echo '<input type="hidden" name="clientId" id="clientIdValues" />';
-                    echo $this->Form->input('batch_name',['required' => 'required']);
-                    echo $this->Form->input('created_date',['value' => date("Y-m-d H:i:s"),'type' => 'hidden']);
-                ?>
-                <?= $this->Form->button(__('Submit')) ?>
-                <?= $this->Form->end() ?>   
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-
-    </div>
 </div>
 
 
@@ -101,23 +71,21 @@
         responsive: true,
         //keys: true,
         //autoFill: true,
-        "pagingType": "first_last_numbers",
-        /** columnDefs: [ {
-            orderable: false,
-            targets:   0,
-            render: function(data, type, full, meta) {
-                return '<input type="checkbox" id="<?php //echo $clientDetail->id; ?>" class="checkbox_check">';
-            }
-        } ], **/
-        select: {
-            style:    'os',
-            selector: 'td:first-child'
-        },
-        order: [[ 1, 'asc' ]]
+        "pagingType": "first_last_numbers"
+        /**columnDefs: [
+            { type: 'de_datetime', targets: 0 },
+            { type: 'de_date', targets: 1 }
+        ],**/
+//        select: {
+//            style:    'os',
+//            selector: 'td:first-child'
+//        },
+//        order: [[ 1, 'asc' ]]
     });
+
 </script>
 <script>
-    function createBatch() {
+    function createBatch(reference) {
         var checkboxes = document.getElementsByClassName('checkbox_check');
         var formSubmit = false;
         var countOfCheckbox = 0;
@@ -133,8 +101,13 @@
 
         if(formSubmit && countOfCheckbox > 1)
         {
+                document.getElementById(reference.id).setAttribute("data-target","#myBatchModal");
                 document.getElementById('clientIdValues').value = userIdArray;
 //            alert(JSON.stringify(userIdArray));   
+        }
+        else
+        {
+            alert("Select at least two clients");
         }
     }
 </script>

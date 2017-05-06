@@ -107,7 +107,8 @@ class ClientDetailsController extends AppController
                     ]
                 );
                 if($this->request->is('post'))
-                    $this->redirect("/addRd/".$clientId);
+                    $this->redirect("/viewClients");
+                //    $this->redirect("/addRd/".$clientId);
             }
             catch (\Exception $e)
             {
@@ -157,8 +158,6 @@ class ClientDetailsController extends AppController
     {
         $clientDetails = $this->paginate($this->ClientDetails);
 
-        $batchModel = $this->loadModel('Batches');
-        $batchData = $batchModel->newEntity();
         $this->set(compact('clientDetails','batchData'));
         $this->set('_serialize', ['clientDetails']);
     }
@@ -187,7 +186,7 @@ class ClientDetailsController extends AppController
         ])->toArray();
 
         $clientRdPaymentData = $clientRdPaymentModel->find('all',[
-            'conditions' => ['client_rd_id' => $clientRdData[0]['id']]
+            'conditions' => ['client_rd_id' => $clientRdData[0]['id'],'status' => 1]
         ])->toArray();
 
         $clientFdData= $clientFd->find('all',[
@@ -199,7 +198,7 @@ class ClientDetailsController extends AppController
         ])->toArray();
 
         $clientLoanPaymentData = $clientLoanPaymentModel->find('all',[
-            'conditions' => ['client_loan_id' => $clientLoanData[0]['id']]
+            'conditions' => ['client_loan_id' => $clientLoanData[0]['id'],'status' => 1]
         ])->toArray();
 
         $this->set(compact('clientDetail','clientRdData','clientRdPaymentData','clientFdData','clientLoanData','clientLoanPaymentData'));

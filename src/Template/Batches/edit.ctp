@@ -3,20 +3,6 @@
   * @var \App\View\AppView $this
   */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Form->postLink(
-                __('Delete'),
-                ['action' => 'delete', $batch->id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $batch->id)]
-            )
-        ?></li>
-        <li><?= $this->Html->link(__('List Batches'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Batch User'), ['controller' => 'BatchUser', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Batch User'), ['controller' => 'BatchUser', 'action' => 'add']) ?></li>
-    </ul>
-</nav>
 <div class="batches form large-9 medium-8 columns content">
     <?= $this->Form->create($batch) ?>
     <fieldset>

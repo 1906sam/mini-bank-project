@@ -35,7 +35,7 @@
                 <td><?= $this->Number->format($count) ?></td>
                 <td>
                     <img src="<?= h($clientFd->client_detail->client_photo) ?>" width="80" height="80"><br>
-                    <?= $clientFd->has('client_detail') ? $this->Html->link($clientFd->client_detail->client_name, ['controller' => 'ClientDetails', 'action' => 'view', $clientFd->client_detail->id]) : '' ?>
+                    <?= $clientFd->has('client_detail') ? $this->Html->link($clientFd->client_detail->client_name, ['controller' => 'ClientDetails', 'action' => 'view', $clientFd->client_detail->id],['target' => '_blank']) : '' ?>
                 </td>
                 <td><?= $this->Number->currency($clientFd->fd_amount) ?></td>
                 <td><?= $this->Number->format($clientFd->time_duration) ?></td>
@@ -44,8 +44,8 @@
                 <td><?= h($clientFd->created_date->nice()) ?></td>
 <!--                <td>--><?php // h($clientFd->modified_date) ?><!--</td>-->
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $clientFd->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $clientFd->id]) ?>
+                    <?php //echo $this->Html->link(__('View'), ['action' => 'view', $clientFd->id]) ?>
+                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $clientFd->id]) ?> | 
                     <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $clientFd->id], ['confirm' => __('Are you sure you want to delete # {0}?', $clientFd->id)]) ?>
                 </td>
             </tr>

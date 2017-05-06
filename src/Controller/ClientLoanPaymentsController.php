@@ -90,9 +90,9 @@ class ClientLoanPaymentsController extends AppController
         
         if ($this->request->is('post')) {
             if(empty($loanAfterwards))
-                $this->request->data['final_loan_amount'] = ($loanDataOriginal['loan_amount'] - $_POST['installment_received'] - $_POST['interest_received']);
+                $this->request->data['final_loan_amount'] = ($loanDataOriginal['loan_amount'] - $_POST['installment_received']);  // - $_POST['interest_received']);
             else
-                $this->request->data['final_loan_amount'] = ($loanAfterwards[0]['final_loan_amount'] - $_POST['installment_received'] - $_POST['interest_received']);
+                $this->request->data['final_loan_amount'] = ($loanAfterwards[0]['final_loan_amount'] - $_POST['installment_received']); // - $_POST['interest_received']);
 
             $clientLoanPayment = $this->ClientLoanPayments->patchEntity($clientLoanPayment, $this->request->data);
             if ($this->ClientLoanPayments->save($clientLoanPayment)) {
@@ -132,9 +132,15 @@ class ClientLoanPaymentsController extends AppController
             }
             $this->Flash->error(__('The client loan payment could not be saved. Please, try again.'));
         }
-        $clientLoan = $this->ClientLoanPayments->ClientLoan->find('list', ['limit' => 200]);
-        $this->set(compact('clientLoanPayment', 'clientLoan'));
-        $this->set('_serialize', ['clientLoanPayment']);
+        $clientLoan = $this->loadModel('ClientLoan');
+        $clientLoanData = $clientLoan->get($clientLoanPayment['client_loan_id']);
+        $clientDetails = $this->loadModel('ClientDetails');
+        $clientData = $clientDetails->get($clientLoanData['client_id']);
+
+        $clientLoanInfo[$clientData['id']] = $clientData['client_name'];
+
+        $this->set(compact('clientLoanPayment', 'clientLoanInfo'));
+        $this->set('_serialize', ['clientLoanPayment','clientLoanInfo']);
     }
 
     /**

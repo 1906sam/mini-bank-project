@@ -11,6 +11,17 @@ use Cake\Event\Event;
  */
 class AdminController extends AppController
 {
+    public function testFile()
+    {
+        $this->viewBuilder()->layout(null);
+    }
+    public function accountSettings()
+    {
+        $userModel = $this->loadModel('Users');
+        $userData = $userModel->newEntity();
+
+        $this->set('userData',$userData);
+    }
     public function dashboard()
     {
         $clientModel = $this->loadModel('ClientDetails');
@@ -52,7 +63,7 @@ class AdminController extends AppController
 
             $clientRdPayments = $clientRdPaymentsModel->find('all',[
                 'fields' => ['client_rd_id','installment_received','created_date' => 'MAX(created_date)'],
-                'conditions' => ['client_rd_id in' => $clientRdId],
+                'conditions' => ['client_rd_id in' => $clientRdId,'status' => 1],
                 'group' => ['client_rd_id','installment_received'],
                 'order' => ['MAX(created_date)' => 'asc']
             ])->toArray();
@@ -85,7 +96,7 @@ class AdminController extends AppController
 
             $clientLoanPayments = $clientLoanPaymentsModel->find('all',[
                 'fields' => ['client_loan_id','final_loan_amount' => 'MIN(final_loan_amount)','created_date' => 'MAX(created_date)'],
-                'conditions' => ['client_loan_id in' => $clientLoanId],
+                'conditions' => ['client_loan_id in' => $clientLoanId,'status' => 1],
                 'group' => ['client_loan_id'],
                 'order' => ['MAX(created_date)' => 'asc']
             ])->toArray();

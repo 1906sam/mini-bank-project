@@ -32,15 +32,15 @@
             ?>
             <tr>
                 <td><?= $count ?></td>
-                <td><?= h($batch->batch_name) ?></td>
+                <td><?= $this->Html->link($batch->batch_name, ['controller' => 'Batches', 'action' => 'view', $batch->id],['target' => '_blank']) ?></td>
                 <td><?= $batchClientData[$batch->id] ?></td>
-                <td><?= $batchRdData[$batch->id] ?></td>
+                <td><?= $this->Number->currency($batchRdData[$batch->id]); ?></td>
                 <td><?= $status = ($batch->status == 0) ? 'Not Active' : 'Active'; ?></td>
-                <td><?= h($batch->created_date) ?></td>
+                <td><?= h($batch->created_date->nice()) ?></td>
 <!--                <td>--><?php ////echo h($batch->modified_date) ?><!--</td>-->
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $batch->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $batch->id]) ?>
+                    <?= $this->Html->link(__('View'), ['action' => 'view', $batch->id],['target' => '_blank']) ?> |
+                    <?php //echo $this->Html->link(__('Edit'), ['action' => 'edit', $batch->id]) ?>
                     <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $batch->id], ['confirm' => __('Are you sure you want to delete # {0}?', $batch->id)]) ?>
                 </td>
             </tr>

@@ -166,7 +166,7 @@ class BatchesController extends AppController
                 {
                     $this->Flash->success(__('The batch has been saved.'));
 
-                    return $this->redirect(['controller' => 'clientDetails','action' => 'index']);
+                    return $this->redirect(['controller' => 'clientRd','action' => 'index']);
                 }
             } catch (\Exception $e)
             {

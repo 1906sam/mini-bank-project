@@ -21,9 +21,11 @@ class ClientRdController extends AppController
         $this->paginate = [
             'contain' => ['ClientDetails']
         ];
+        $batchModel = $this->loadModel('Batches');
         $clientRd = $this->paginate($this->ClientRd);
-
-        $this->set(compact('clientRd'));
+        $batchData = $batchModel->newEntity();
+        
+        $this->set(compact('clientRd','batchData'));
         $this->set('_serialize', ['clientRd']);
     }
 
@@ -49,26 +51,36 @@ class ClientRdController extends AppController
      *
      * @return \Cake\Network\Response|null Redirects on successful add, renders view otherwise.
      */
-    public function add($id = null)
+    public function add()
     {
         $clientRd = $this->ClientRd->newEntity();
         if ($this->request->is('post')) {
             $clientRd = $this->ClientRd->patchEntity($clientRd, $this->request->data);
-            if ($this->ClientRd->save($clientRd)) {
-                $this->Flash->success(__('The client\'s RD details has been saved.'));
+            try
+            {
+                if ($this->ClientRd->save($clientRd)) {
 
-                return $this->redirect('/viewRdInformation');
+                    $this->Flash->success(__('Client\'s RD details has been saved.'));
+
+                    return $this->redirect('/viewRdInformation');
+                }
+            } catch(\PDOException $e)
+            {
+                if($e->errorInfo[1] == 1062)
+                    $this->Flash->error(__('RD already present for the selected user.'));
             }
-            $this->Flash->error(__('The client\'s RD details could not be saved. Please, try again.'));
+            $this->Flash->error(__('Client\'s RD could not be saved. Please, try again.'));
         }
-        $clientDetails = $this->ClientRd->ClientDetails->find('list', [
-            'limit' => 200,
-            'keyField' => 'id',
-            'valueField' => 'client_name',
-            'conditions' => ['id' => $id]
-        ]);
-        $this->set('id', $id);
-        $this->set(compact('clientRd', 'clientDetails'));
+        $clientDetails = $this->ClientRd->ClientDetails->find('all', [
+            'conditions' => ['status' => 1]
+        ])->toArray();
+
+        foreach ($clientDetails as $data)
+        {
+            $clientDataArray[$data['id']] = $data['client_name'].'('.$data['mobile'].')';
+        }
+
+        $this->set(compact('clientRd', 'clientDataArray'));
         $this->set('_serialize', ['clientRd']);
     }
 
@@ -84,14 +96,31 @@ class ClientRdController extends AppController
         $clientRd = $this->ClientRd->get($id, [
             'contain' => []
         ]);
+
+        $initialStatus = $clientRd['status'];
+
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $clientRd = $this->ClientRd->patchEntity($clientRd, $this->request->data);
-            if ($this->ClientRd->save($clientRd)) {
-                $this->Flash->success(__('The client rd has been saved.'));
+            if($clientRd['status'] == 1 && $_POST['status'] == 0)
+                $this->request->data['created_date'] = date("Y-m-d H:i:s");
+
+            $clientRdPaymentsModel = $this->loadModel('ClientRdPayments');
+
+            $clientRdPatched = $this->ClientRd->patchEntity($clientRd, $this->request->data);
+
+            if ($this->ClientRd->save($clientRdPatched)) {
+                if($initialStatus == 0 && $_POST['status'] == 1)
+                {
+                    $clientRdPaymentsData = $clientRdPaymentsModel->updateAll(['status' => 0],['client_rd_id' => $id]);
+                }
+                else if($initialStatus == 1 && $_POST['status'] == 0)
+                {
+                    $clientRdPaymentsData = $clientRdPaymentsModel->updateAll(['status' => 1],['client_rd_id' => $id]);
+                }
+                $this->Flash->success(__('Client\'s RD has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The client rd could not be saved. Please, try again.'));
+            $this->Flash->error(__('Client\'s RD could not be saved. Please, try again.'));
         }
         $clientDetails = $this->ClientRd->ClientDetails->find('list', [
             'limit' => 200,

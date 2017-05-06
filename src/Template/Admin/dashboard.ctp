@@ -24,7 +24,7 @@
                 <div class="icon">
                     <i class="ion ion-person-add"></i>
                 </div>
-                <a href="/viewClients" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="/viewClients" target="_blank" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <!-- RD Deposites -->
@@ -38,7 +38,7 @@
                 <div class="icon">
                     <i class="fa fa-inr"></i>
                 </div>
-                <a href="/viewRdPayment" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="/viewRdPayment" target="_blank" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <!-- ./col -->
@@ -53,7 +53,7 @@
                 <div class="icon">
                     <i class="ion ion-person-add"></i>
                 </div>
-                <a href="/viewFdInformation" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="/viewFdInformation" target="_blank" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <!-- ./col -->
@@ -68,7 +68,7 @@
                 <div class="icon">
                     <i class="fa fa-inr"></i>
                 </div>
-                <a href="/viewFdInformation" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="/viewFdInformation" target="_blank" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <!-- ./col -->
@@ -84,7 +84,7 @@
                 <div class="icon">
                     <i class="ion ion-person-add"></i>
                 </div>
-                <a href="/viewLoanInformation" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="/viewLoanInformation" target="_blank" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <!-- Loan Deposites -->
@@ -98,7 +98,7 @@
                 <div class="icon">
                     <i class="fa fa-inr"></i>
                 </div>
-                <a href="/viewLoanPayment" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="/viewLoanPayment" target="_blank" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
     </div>
@@ -110,7 +110,7 @@
 <!--        <section class="col-lg-5 connectedSortable">-->
             <div class="col-lg-6">
                 <p style="text-align: center; font-size: large; text-decoration: underline">Upcoming RD Payments</p>
-                <table id="clientRdTable" class="table table-striped table-bordered table-hover table-condensed dt-responsive nowrap" cellspacing="0"  width="100%">
+                <table id="clientRdTable" target="_blank" class="table table-striped table-bordered table-hover table-condensed dt-responsive nowrap" cellspacing="0"  width="100%">
                     <thead>
                     <tr>
                         <th>S.No.</th>
@@ -141,7 +141,7 @@
             </div>
         <div class="col-lg-6">
             <p style="text-align: center; font-size: large; text-decoration: underline">Upcoming Loan Payments</p>
-            <table id="clientRdTable" class="table table-striped table-bordered table-hover table-condensed dt-responsive nowrap" cellspacing="0"  width="100%">
+            <table id="clientRdTable" target="_blank" class="table table-striped table-bordered table-hover table-condensed dt-responsive nowrap" cellspacing="0"  width="100%">
                 <thead>
                 <tr>
                     <th>S.No.</th>

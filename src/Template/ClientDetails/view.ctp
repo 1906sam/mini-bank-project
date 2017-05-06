@@ -88,6 +88,12 @@
                                 echo 'Closed';
                         ?></td>
                 </tr>
+                <?php  if($clientRdData[0]['status'] == 1) { ?>
+                <tr>
+                    <th scope="row"><?= __('Closing Date') ?></th>
+                    <td><?= $clientRdData[0]['modified_date']->nice(); ?></td>
+                </tr>
+                <?php } ?>
                 <tr>
                     <th scope="row"><?= __('Created Date') ?></th>
                     <td><?= $clientRdData[0]['created_date']->nice(); ?></td>
@@ -183,6 +189,12 @@
                             ?>
                         </td>
                     </tr>
+                    <?php  if($clientFdData[0]['status'] == 1) { ?>
+                        <tr>
+                            <th scope="row"><?= __('Closing Date') ?></th>
+                            <td><?= $clientFdData[0]['modified_date']->nice(); ?></td>
+                        </tr>
+                    <?php } ?>
                     <tr>
                         <th scope="row"><?= __('Created Date') ?></th>
                         <td><?= $clientFdData[0]['created_date']->nice(); ?></td>
@@ -212,6 +224,12 @@
                         <th scope="row"><?= __('Status') ?></th>
                         <td><?php echo $status = ($clientLoanData[0]['status'] == 0) ? 'Running' : 'Closed'; ?></td>
                     </tr>
+                    <?php  if($clientLoanData[0]['status'] == 1) { ?>
+                        <tr>
+                            <th scope="row"><?= __('Closing Date') ?></th>
+                            <td><?= $clientLoanData[0]['modified_date']->nice(); ?></td>
+                        </tr>
+                    <?php } ?>
                     <tr>
                         <th scope="row"><?= __('Created Date') ?></th>
                         <td><?= $clientLoanData[0]['created_date']->nice(); ?></td>

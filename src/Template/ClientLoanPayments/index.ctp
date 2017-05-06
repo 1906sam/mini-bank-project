@@ -12,11 +12,12 @@
         <thead>
             <tr>
                 <th>S.No.</th>
-                <th>Client Loan Info</th>
+<!--                <th>Client Loan Info</th>-->
                 <th>Client Info</th>
                 <th>Interest Received</th>
                 <th>Installment Received</th>
                 <th>Loan Pending</th>
+                <th>Status</th>
                 <th>Payment Date</th>
 <!--                <th>modified_date</th>-->
                 <th>Actions</th>
@@ -34,17 +35,24 @@
 
               <tr>
                 <td><?= $this->Number->format($count) ?></td>
-                <td><?= $clientLoanPayment->has('client_loan') ? $this->Html->link("More Information", ['controller' => 'ClientLoan', 'action' => 'view', $clientLoanPayment->client_loan->id]) : '' ?></td>
-                <td><?php echo $this->Html->link($clientLoanInfo[$clientLoanPayment->client_loan_id], ['controller' => 'ClientDetails', 'action' => 'view', $clientLoanData[$clientLoanPayment->client_loan_id]]); ?></td>
+<!--                <td>--><?php //echo $clientLoanPayment->has('client_loan') ? $this->Html->link("More Information", ['controller' => 'ClientLoan', 'action' => 'view', $clientLoanPayment->client_loan->id]) : '' ?><!--</td>-->
+                <td><?php echo $this->Html->link($clientLoanInfo[$clientLoanPayment->client_loan_id], ['controller' => 'ClientDetails', 'action' => 'view', $clientLoanData[$clientLoanPayment->client_loan_id]],['target' => '_blank']); ?></td>
                 <td><?= $this->Number->currency($clientLoanPayment->interest_received) ?></td>
                 <td><?= $this->Number->currency($clientLoanPayment->installment_received) ?></td>
                 <td><?php echo $this->Number->currency($clientLoanPayment->final_loan_amount) ?></td>
+                    <td><?php
+                        if($clientLoanPayment->status == 1)
+                            echo "New";
+                        else
+                            echo "Old";
+                        ?>
+                    </td>
                 <td><?= h($clientLoanPayment->created_date->nice()) ?></td>
 <!--                <td>--><?php //h($clientLoanPayment->modified_date) ?><!--</td>-->
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $clientLoanPayment->id]) ?>
+<!--                    --><?php //echo $this->Html->link(__('View'), ['action' => 'view', $clientLoanPayment->id]) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $clientLoanPayment->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $clientLoanPayment->id], ['confirm' => __('Are you sure you want to delete # {0}?', $clientLoanPayment->id)]) ?>
+<!--                    --><?php //echo $this->Form->postLink(__('Delete'), ['action' => 'delete', $clientLoanPayment->id], ['confirm' => __('Are you sure you want to delete # {0}?', $clientLoanPayment->id)]) ?>
                 </td>
             </tr>
             <?php endforeach; ?>

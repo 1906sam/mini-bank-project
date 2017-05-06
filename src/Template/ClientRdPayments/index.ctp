@@ -12,10 +12,11 @@
         <thead>
             <tr>
                 <th>S.No.</th>
-                <th>Client Rd Information</th>
+<!--                <th>Client Rd Information</th>-->
                 <th>Client Name</th>
                 <th>Installment Received</th>
 <!--                <th>final_rd_amount</th>-->
+                <th>Status</th>
                 <th>Penalty</th>
                 <th>Created Date</th>
 <!--                <th>modified_date</th>-->
@@ -32,15 +33,22 @@
                     ?>
             <tr>
                 <td><?= $count; ?></td>
-                <td><?= $clientRdPayment->has('client_rd') ? $this->Html->link("More Information", ['controller' => 'ClientRd', 'action' => 'view', $clientRdPayment->client_rd->id]) : '' ?></td>
-                <td><?= $this->Html->link($clientRdInfo[$clientRdPayment->client_rd_id], ['controller' => 'ClientDetails', 'action' => 'view', $clientRdData[$clientRdPayment->client_rd_id]]); ?></td>
+<!--                <td>--><?php //echo $clientRdPayment->has('client_rd') ? $this->Html->link("More Information", ['controller' => 'ClientRd', 'action' => 'view', $clientRdPayment->client_rd->id]) : '' ?><!--</td>-->
+                <td><?= $this->Html->link($clientRdInfo[$clientRdPayment->client_rd_id], ['controller' => 'ClientDetails', 'action' => 'view', $clientRdData[$clientRdPayment->client_rd_id]],['target' => '_blank']); ?></td>
                 <td><?= $this->Number->currency($clientRdPayment->installment_received) ?></td>
 <!--                <td>--><?php //$this->Number->format($clientRdPayment->final_rd_amount) ?><!--</td>-->
+                <td><?php
+                        if($clientRdPayment->status == 1)
+                            echo "New";
+                        else
+                            echo "Old";
+                    ?>
+                </td>
                 <td><?= $this->Number->format($clientRdPayment->penalty) ?></td>
                 <td><?= h($clientRdPayment->created_date->nice()) ?></td>
 <!--                <td>--><?php //h($clientRdPayment->modified_date) ?><!--</td>-->
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $clientRdPayment->id]) ?>
+                    <?php //echo $this->Html->link(__('View'), ['action' => 'view', $clientRdPayment->id]) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $clientRdPayment->id]) ?>
                     <?php //echo $this->Form->postLink(__('Delete'), ['action' => 'delete', $clientRdPayment->id], ['confirm' => __('Are you sure you want to delete # {0}?', $clientRdPayment->id)]) ?>
                 </td>

@@ -8,7 +8,7 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
     <?php echo $this->Html->css('AdminLTE./bootstrap/css/bootstrap'); ?>
-    <?php if($_SERVER['REQUEST_URI'] == '/addFd' || $_SERVER['REQUEST_URI'] == '/addLoan') { ?>
+    <?php if($_SERVER['REQUEST_URI'] == '/addFd' || $_SERVER['REQUEST_URI'] == '/addLoan' || $_SERVER['REQUEST_URI'] == '/addRd') { ?>
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
         <style>
             /* this original for Autocomplete Combobox */
@@ -18,7 +18,7 @@
             /* *** Add this for visible Scrolling ;) */
             .ui-autocomplete {
                 max-height: 350px;
-                overflow-y: auto;
+                overflow-y: scroll;
                 /* prevent horizontal scrollbar */
                 overflow-x: hidden;
                 /* add padding to account for vertical scrollbar */
@@ -60,7 +60,7 @@
         <link rel="stylesheet" href="http://bnkprj.dev/css/style.css">
     <?php } ?>
     <!--  for jquery ui  -->
-    <?php if($_SERVER['REQUEST_URI'] == '/addFd' || $_SERVER['REQUEST_URI'] == '/addLoan') { ?>
+    <?php if($_SERVER['REQUEST_URI'] == '/addFd' || $_SERVER['REQUEST_URI'] == '/addLoan' || $_SERVER['REQUEST_URI'] == '/addRd') { ?>
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script>
             $( function() {
@@ -224,9 +224,9 @@
             <!-- Logo -->
             <a href="<?php echo $this->Url->build('/'); ?>" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini"><?php echo $theme['logo']['mini'] ?></span>
+                <span class="logo-mini"><?php echo "BP" ?></span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg"><?php echo $theme['logo']['large'] ?></span>
+                <span class="logo-lg"><?php echo "Bank Project" ?></span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <?php echo $this->element('nav-top') ?>
@@ -265,12 +265,14 @@
     <!-- Bootstrap 3.3.5 -->
 <?php echo $this->Html->script('AdminLTE./bootstrap/js/bootstrap'); ?>
     <?php
-        if($_SERVER['REQUEST_URI'] == '/addFd' || $_SERVER['REQUEST_URI'] == '/addLoan') { ?>
+        if($_SERVER['REQUEST_URI'] == '/addFd' || $_SERVER['REQUEST_URI'] == '/addLoan' || $_SERVER['REQUEST_URI'] == '/addRd') { ?>
         <script>
             $.fn.bootstrapBtn = $.fn.button.noConflict();
         </script>
     <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
     <?php } ?>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
 <!-- SlimScroll -->
 <?php echo $this->Html->script('AdminLTE./plugins/slimScroll/jquery.slimscroll.min'); ?>
 <!-- FastClick -->

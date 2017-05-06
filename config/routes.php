@@ -52,7 +52,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/', ['controller' => 'admin', 'action' => 'dashboard', 'home']);
     $routes->connect('/addClients',['controller' => 'ClientDetails','action' => 'add']);
     $routes->connect('/viewClients',['controller' => 'ClientDetails','action' => 'index']);
-    $routes->connect('/addRd/*',['controller' => 'ClientRd','action' => 'add']);
+    $routes->connect('/addRd',['controller' => 'ClientRd','action' => 'add']);
     $routes->connect('/viewRdInformation',['controller' => 'ClientRd','action' => 'index']);
     $routes->connect('/viewRdPayment',['controller' => 'ClientRdPayments','action' => 'index']);
     $routes->connect('/addFd',['controller' => 'ClientFd','action' => 'add']);

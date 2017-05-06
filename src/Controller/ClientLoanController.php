@@ -61,11 +61,16 @@ class ClientLoanController extends AppController
             }
             $this->Flash->error(__('The client loan could not be saved. Please, try again.'));
         }
-        $clientDetails = $this->ClientLoan->ClientDetails->find('list', [
-            'limit' => 200,
-            'keyField' => 'id',
-            'valueField' => 'client_name'
-        ]);
+        $clientDetails = $this->ClientLoan->ClientDetails->find('all', [
+            'conditions' => ['status' => 1]
+        ])->toArray();
+
+        foreach ($clientDetails as $data)
+        {
+            $clientDataArray[$data['id']] = $data['client_name'].'('.$data['mobile'].')';
+        }
+
+        $this->set('clientDataArray',$clientDataArray);
         $this->set(compact('clientLoan', 'clientDetails'));
         $this->set('_serialize', ['clientLoan']);
     }
@@ -82,17 +87,41 @@ class ClientLoanController extends AppController
         $clientLoan = $this->ClientLoan->get($id, [
             'contain' => []
         ]);
+
+        $initialStatus = $clientLoan['status'];
+
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $clientLoan = $this->ClientLoan->patchEntity($clientLoan, $this->request->data);
-            if ($this->ClientLoan->save($clientLoan)) {
-                $this->Flash->success(__('The client loan has been saved.'));
+            if($clientLoan['status'] == 1 && $_POST['status'] == 0)
+                $this->request->data['created_date'] = date("Y-m-d H:i:s");
+
+            $clientLoanPaymentsModel = $this->loadModel('ClientLoanPayments');
+            $clientLoanPatched = $this->ClientLoan->patchEntity($clientLoan, $this->request->data);
+
+            if ($this->ClientLoan->save($clientLoanPatched)) {
+                if($initialStatus == 0 && $_POST['status'] == 1)
+                {
+                    $clientLoanPaymentsData = $clientLoanPaymentsModel->updateAll(['status' => 0],['client_loan_id' => $id]);
+                }
+                else if($initialStatus == 1 && $_POST['status'] == 0)
+                {
+                    $clientLoanPaymentsData = $clientLoanPaymentsModel->updateAll(['status' => 1],['client_loan_id' => $id]);
+                }
+                $this->Flash->success(__('Client\'s loan has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The client loan could not be saved. Please, try again.'));
+            $this->Flash->error(__('Client\'s loan could not be saved. Please, try again.'));
         }
-        $clientDetails = $this->ClientLoan->ClientDetails->find('list', ['limit' => 200]);
-        $this->set(compact('clientLoan', 'clientDetails'));
+        $clientDetails = $this->ClientLoan->ClientDetails->find('all', [
+            'conditions' => ['status' => 1,'id' => $clientLoan['client_id']]
+        ])->toArray();
+
+        foreach ($clientDetails as $data)
+        {
+            $clientDataArray[$data['id']] = $data['client_name'].'('.$data['mobile'].')';
+        }
+
+        $this->set(compact('clientLoan', 'clientDataArray'));
         $this->set('_serialize', ['clientLoan']);
     }
 

@@ -73,6 +73,18 @@ class ClientDetailsTable extends Table
             ->notEmpty('status');
 
         $validator
+            ->integer('has_rd')
+            ->notEmpty('has_rd');
+
+        $validator
+            ->integer('has_fd')
+            ->notEmpty('has_fd');
+
+        $validator
+            ->integer('has_loan')
+            ->notEmpty('has_loan');
+
+        $validator
             ->dateTime('created_date')
             ->requirePresence('created_date', 'create')
             ->notEmpty('created_date');

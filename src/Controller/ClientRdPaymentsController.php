@@ -120,9 +120,14 @@ class ClientRdPaymentsController extends AppController
             }
             $this->Flash->error(__('The client rd payment could not be saved. Please, try again.'));
         }
-        $clientRd = $this->ClientRdPayments->ClientRd->find('list', ['limit' => 200]);
-        $this->set(compact('clientRdPayment', 'clientRd'));
-        $this->set('_serialize', ['clientRdPayment']);
+        $clientRd = $this->loadModel('ClientRd');
+        $clientRdData = $clientRd->get($clientRdPayment['client_rd_id']);
+        $clientDetails = $this->loadModel('ClientDetails');
+        $clientData = $clientDetails->get($clientRdData['client_id']);
+
+        $clientRdInfo[$clientData['id']] = $clientData['client_name'];
+        $this->set(compact('clientRdPayment', 'clientRdInfo'));
+        $this->set('_serialize', ['clientRdPayment','clientRdInfo']);
     }
 
     /**

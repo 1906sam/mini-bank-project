@@ -35,7 +35,7 @@
                 <td><?= $this->Number->format($count) ?></td>
                 <td>
                     <img src="<?= h($clientLoan->client_detail->client_photo) ?>" width="80" height="80"><br>
-                    <?= $clientLoan->has('client_detail') ? $this->Html->link($clientLoan->client_detail->client_name, ['controller' => 'ClientDetails', 'action' => 'view', $clientLoan->client_detail->id]) : '' ?>
+                    <?= $clientLoan->has('client_detail') ? $this->Html->link($clientLoan->client_detail->client_name, ['controller' => 'ClientDetails', 'action' => 'view', $clientLoan->client_detail->id],['target' => '_blank']) : '' ?>
                 </td>
                 <td><?= $this->Number->toPercentage($clientLoan->rate_of_interest) ?></td>
                 <td><?= $this->Number->currency($clientLoan->loan_amount) ?></td>
@@ -43,7 +43,7 @@
                 <td><?= h($clientLoan->created_date->nice()) ?></td>
 <!--                <td>--><?php //h($clientLoan->modified_date) ?><!--</td>-->
                 <td class="actions">
-                    <?= $this->Html->link(__('Add Payment'), ['controller' => 'ClientLoanPayments','action' => 'add', $clientLoan->client_detail->id]) ?>
+                    <?= $this->Html->link(__('Add Payment'), ['controller' => 'ClientLoanPayments','action' => 'add', $clientLoan->client_detail->id],['target' => '_blank']) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $clientLoan->id]) ?>
                     <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $clientLoan->id], ['confirm' => __('Are you sure you want to delete # {0}?', $clientLoan->id)]) ?>
                 </td>

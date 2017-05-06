@@ -71,19 +71,22 @@ class ClientFdController extends AppController
         if ($this->request->is('post')) {
                 $clientFd = $this->ClientFd->patchEntity($clientFd, $this->request->data);
                 if ($this->ClientFd->save($clientFd)) {
-                    $this->Flash->success(__('The client\'s FD has been saved.'));
+                    $this->Flash->success(__('Client\'s FD has been saved.'));
 
                     return $this->redirect('/viewFdInformation');
                 }
-                $this->Flash->error(__('The client\'s FD could not be saved. Please, try again.'));
+                $this->Flash->error(__('Client\'s FD could not be saved. Please, try again.'));
         }
-        $clientDetails = $this->ClientFd->ClientDetails->find('list', [
-            'limit' => 200,
-            'keyField' => 'id',
-            'valueField' => 'client_name'
+        $clientDetails = $this->ClientFd->ClientDetails->find('all', [
+            'conditions' => ['status' => 1]
         ])->toArray();
 
-        $this->set('clientDetails',$clientDetails);
+        foreach ($clientDetails as $data)
+        {
+            $clientDataArray[$data['id']] = $data['client_name'].'('.$data['mobile'].')';
+        }
+
+        $this->set('clientDataArray',$clientDataArray);
         $this->set('clientFd',$clientFd);
         $this->set('_serialize', ['clientFd','clientDetails']);
     }
@@ -104,13 +107,22 @@ class ClientFdController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $clientFd = $this->ClientFd->patchEntity($clientFd, $this->request->data);
             if ($this->ClientFd->save($clientFd)) {
-                $this->Flash->success(__('The client fd has been saved.'));
+                $this->Flash->success(__('Client\'s FD has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The client fd could not be saved. Please, try again.'));
+            $this->Flash->error(__('Client\'s FD could not be saved. Please, try again.'));
         }
-        $clientDetails = $this->ClientFd->ClientDetails->find('list', ['limit' => 200]);
+        $clientDetails = $this->ClientFd->ClientDetails->find('all', [
+            'conditions' => ['status' => 1,'id' => $clientFd['client_id']]
+        ])->toArray();
+
+        foreach ($clientDetails as $data)
+        {
+            $clientDataArray[$data['id']] = $data['client_name'].'('.$data['mobile'].')';
+        }
+
+        $this->set('clientDataArray',$clientDataArray);
         $this->set(compact('clientFd', 'clientDetails'));
         $this->set('_serialize', ['clientFd']);
     }

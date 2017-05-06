@@ -9,7 +9,7 @@
         <legend><?= __('Add Client\'s Personal  Detail') ?></legend>
         <?php
             echo $this->Form->input('client_name',['class' => 'input-control']);
-            echo $this->Form->input('mobile');
+            echo $this->Form->input('mobile',['type' => 'number']);
             echo $this->Form->input('introducer_person');
             echo $this->Form->input('client_photo',['type' => 'file','required' => 'required','accept' => '.png, .jpg, .jpeg']);
             echo $this->Form->input('client_sign_photo',['type' => 'file','required' => 'required','accept' => '.png, .jpg, .jpeg']);

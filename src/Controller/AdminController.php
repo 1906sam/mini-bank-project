@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
+use Cake\Utility\Hash;
 
 /**
  * ClientDetails Controller
@@ -53,20 +54,111 @@ class AdminController extends AppController
             'conditions' => ['status' => 0]
         ])->sumOf('loan_amount');
 
-        // Rd payments code starts from here:
+    ///////// Code for tables having cumulative data starts from here /////////////////////
 
+        /******  Code for FD ******/
+        $clientRunFdData = $clientFdModel->find('all',[
+            'conditions' => ['status' => 0]
+        ])->sumOf('fd_amount');
+
+        $clientComFdData = $clientFdModel->find('all',[
+            'conditions' => ['status' => 1]
+        ])->sumOf('terminating_amount');
+
+
+        /******  Code for RD ******/
+        $clientRdList = $clientRdModel->find('all')->toArray();
+
+        $totalRunningRdInwardCash = $totalRunningRdOutwardCash = 0;
+        foreach ($clientRdList as $rdItem)
+        {
+            if($rdItem['status'] == 0)
+            {
+                $rdInstallmentSum = $clientRdPaymentsModel->find('all',[
+                    'conditions' => ['client_rd_id' => $rdItem['id']]
+                ])->sumOf('installment_received');
+
+                $rdPenaltySum = $clientRdPaymentsModel->find('all',[
+                    'conditions' => ['client_rd_id' => $rdItem['id']]
+                ])->sumOf('penalty');
+
+                $totalRunningRdInwardCash += $rdInstallmentSum + $rdPenaltySum;
+            }
+            else
+            {
+                $rdInstallmentSum = $clientRdPaymentsModel->find('all',[
+                    'conditions' => ['client_rd_id' => $rdItem['id']]
+                ])->sumOf('installment_received');
+
+                $rdInterestSum = $clientRdPaymentsModel->find('all',[
+                    'conditions' => ['client_rd_id' => $rdItem['id']]
+                ])->sumOf('interest_on_rd');
+
+                $rdPenaltySum = $clientRdPaymentsModel->find('all',[
+                    'conditions' => ['client_rd_id' => $rdItem['id']]
+                ])->sumOf('penalty');
+
+                $totalRunningRdOutwardCash += abs($rdPenaltySum - $rdInstallmentSum - $rdInterestSum);
+            }
+        }
+
+        /******  Code for Loan ******/
+
+        $clientLoanList = $clientLoanModel->find('all')->toArray();
+        $totalRunningLoanInwardCash = $totalRunningLoanOutwardCash = 0;
+        foreach ($clientLoanList as $loanItem)
+        {
+            if($loanItem['status'] == 0)
+            {
+                $loanInterestSum = $clientLoanPaymentsModel->find('all',[
+                    'conditions' => ['client_loan_id' => $loanItem['id']]
+                ])->sumOf('interest_received');
+
+                $loanInstallmentSum = $clientLoanPaymentsModel->find('all',[
+                    'conditions' => ['client_loan_id' => $loanItem['id']]
+                ])->sumOf('installment_received');
+
+                $totalRunningLoanInwardCash += $loanInterestSum + $loanInstallmentSum;
+            }
+            else
+            {
+                $loanInterestSum = $clientLoanPaymentsModel->find('all',[
+                    'conditions' => ['client_loan_id' => $loanItem['id']]
+                ])->sumOf('interest_received');
+
+                $loanInstallmentSum = $clientLoanPaymentsModel->find('all',[
+                    'conditions' => ['client_loan_id' => $loanItem['id']]
+                ])->sumOf('installment_received');
+
+                $totalRunningLoanInwardCash += $loanInterestSum + $loanInstallmentSum;
+            }
+        }
+
+
+
+        ///////// Code for tables having cumulative data ends here /////////////////////
+//Rd payments code starts from here:
         $clientRdId = $clientRdModel->find('list',[
             'fields' => ['id'],
             'conditions' => ['status' => 0],
             'limit' => 10
         ])->toArray();
 
-            $clientRdPayments = $clientRdPaymentsModel->find('all',[
-                'fields' => ['client_rd_id','installment_received','created_date' => 'MAX(created_date)'],
-                'conditions' => ['client_rd_id in' => $clientRdId,'status' => 1],
-                'group' => ['client_rd_id','installment_received'],
-                'order' => ['MAX(created_date)' => 'asc']
-            ])->toArray();
+        $clientRdPaymentsId = $clientRdPaymentsModel->find('all',[
+            'fields' => ['client_rd_id','id' => 'MAX(id)'],
+            'conditions' => ['client_rd_id in ' => $clientRdId,'status' => 1],
+            'group' => ['client_rd_id']
+        ])->toArray();
+
+        $clientRdPaymentsId = Hash::extract($clientRdPaymentsId,"{n}.id");
+
+        $clientRdPayments = $clientRdPaymentsModel->find('all',[
+             'fields' => ['client_rd_id','installment_received','created_date' => 'MAX(created_date)'],
+             'conditions' => ['id in' => $clientRdPaymentsId],
+             'group' => ['client_rd_id','installment_received'],
+             'order' => ['MAX(created_date)' => 'desc']
+         ])->toArray();
+
 
         $clientRdDataValue = $clientRdModel->find('list',[
             'keyField' => 'id',
@@ -81,24 +173,33 @@ class AdminController extends AppController
         ])->toArray();
 
         $clientRdInfo = null;
-        foreach ($clientRdDataValue as $data)
+        $clientRdDataValueKeys = array_keys($clientRdDataValue);
+        foreach ($clientRdDataValueKeys as $key)
         {
-            $clientRdInfo[array_search($data,$clientRdDataValue)] = $clientData[$data];
+            $clientRdInfo[$key] = $clientData[$clientRdDataValue[$key]];
         }
         // Rd payments code ends here: /////////////////////////////////////////
 
-        /////////////////////////Loan payment code starts from here:
+/////////////////////////Loan payment code starts from here:
         $clientLoanId = $clientLoanModel->find('list',[
             'fields' => ['id'],
             'conditions' => ['status' => 0],
             'limit' => 10
         ])->toArray();
 
+        $clientLoanPaymentsId = $clientLoanPaymentsModel->find('all',[
+            'fields' => ['client_loan_id','id' => 'MAX(id)'],
+            'conditions' => ['client_loan_id in ' => $clientLoanId,'status' => 1],
+            'group' => ['client_loan_id']
+        ])->toArray();
+
+        $clientLoanPaymentsId = Hash::extract($clientLoanPaymentsId,"{n}.id");
+
             $clientLoanPayments = $clientLoanPaymentsModel->find('all',[
                 'fields' => ['client_loan_id','final_loan_amount' => 'MIN(final_loan_amount)','created_date' => 'MAX(created_date)'],
-                'conditions' => ['client_loan_id in' => $clientLoanId,'status' => 1],
+                'conditions' => ['id in' => $clientLoanPaymentsId],
                 'group' => ['client_loan_id'],
-                'order' => ['MAX(created_date)' => 'asc']
+                'order' => ['MAX(created_date)' => 'desc']
             ])->toArray();
 
         $clientLoanDataValue = $clientLoanModel->find('list',[
@@ -114,12 +215,14 @@ class AdminController extends AppController
         ])->toArray();
 
         $clientLoanInfo = null;
-        foreach ($clientLoanDataValue as $data)
+        $clientLoanDataValueKeys = array_keys($clientLoanDataValue);
+        foreach ($clientLoanDataValueKeys as $key)
         {
-            $clientLoanInfo[array_search($data,$clientLoanDataValue)] = $clientData[$data];
+            $clientLoanInfo[$key] = $clientData[$clientLoanDataValue[$key]];
         }
 
-
+        $this->set(compact('clientRunFdData','clientComFdData','totalRunningRdInwardCash','totalRunningRdOutwardCash',
+            'totalRunningLoanInwardCash'));
         $this->set(compact(
             'clientCount','clientLoanCount','clientFdCount','clientRdData','clientFdData','clientLoanData','clientRd',
             'clientRdPayments','clientRdInfo','clientRdDataValue','clientLoanPayments','clientLoanInfo','clientLoanDataValue'

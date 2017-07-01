@@ -75,20 +75,18 @@ class ClientLoanPaymentsController extends AppController
         $clientLoan = $this->loadModel('ClientLoan');
         $clientLoanPaymentInstance = $this->loadModel('ClientLoanPayments');
         $clientDetails = $this->loadModel('ClientDetails');
-        $clientData = $clientDetails->get($id);
-        $clientLoanData = $clientLoan->find('list',[
-            'keyField' => 'id',
-            'valueField' => 'client_id',
-            'conditions' => ['client_id' => $id]
-        ])->toArray();
 
-        $loanDataOriginal = $clientLoan->get(array_search($id,$clientLoanData));
+        $loanDataOriginal = $clientLoan->get($id);
+        $clientData = $clientDetails->get($loanDataOriginal['client_id']);
         $loanAfterwards = $clientLoanPaymentInstance->find('all',[
             'conditions' => ['client_loan_id' => $loanDataOriginal['id']],
             'order' => ['created_date' => 'desc']
         ])->toArray();
         
         if ($this->request->is('post')) {
+            if(isset($_POST['select_date']) && $_POST['select_date'] != '')
+                $this->request->data['created_date'] = $_POST['select_date'];
+
             if(empty($loanAfterwards))
                 $this->request->data['final_loan_amount'] = ($loanDataOriginal['loan_amount'] - $_POST['installment_received']);  // - $_POST['interest_received']);
             else
@@ -103,7 +101,7 @@ class ClientLoanPaymentsController extends AppController
             $this->Flash->error(__('The client loan payment could not be saved. Please, try again.'));
         }
         $clientLoanInfo = array(
-            array_search($id,$clientLoanData) => $clientData['client_name']
+            $id => $clientData['client_name']
         );
 
         $this->set('loanDataOriginal',$loanDataOriginal);

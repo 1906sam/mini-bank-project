@@ -2,7 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
-
+use Cake\I18n\FrozenTime;
 /**
  * ClientFd Controller
  *
@@ -49,26 +49,15 @@ class ClientFdController extends AppController
      *
      * @return \Cake\Network\Response|null Redirects on successful add, renders view otherwise.
      */
-//    public function add()
-//    {
-//        $clientFd = $this->ClientFd->newEntity();
-//        if ($this->request->is('post')) {
-//            $clientFd = $this->ClientFd->patchEntity($clientFd, $this->request->data);
-//            if ($this->ClientFd->save($clientFd)) {
-//                $this->Flash->success(__('The client fd has been saved.'));
-//
-//                return $this->redirect(['action' => 'index']);
-//            }
-//            $this->Flash->error(__('The client fd could not be saved. Please, try again.'));
-//        }
-//        $clientDetails = $this->ClientFd->ClientDetails->find('list', ['limit' => 200]);
-//        $this->set(compact('clientFd', 'clientDetails'));
-//        $this->set('_serialize', ['clientFd']);
-//    }
     public function add()
     {
         $clientFd = $this->ClientFd->newEntity();
         if ($this->request->is('post')) {
+            if(isset($_POST['select_date']) && $_POST['select_date'] != '')
+                $this->request->data['created_date'] = $_POST['select_date'];
+            if(isset($_POST['closing_date']) && $_POST['closing_date'] != '')
+                $this->request->data['modified_date'] = $_POST['closing_date'];
+
                 $clientFd = $this->ClientFd->patchEntity($clientFd, $this->request->data);
                 if ($this->ClientFd->save($clientFd)) {
                     $this->Flash->success(__('Client\'s FD has been saved.'));
@@ -104,7 +93,23 @@ class ClientFdController extends AppController
         $clientFd = $this->ClientFd->get($id, [
             'contain' => []
         ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
+        if ($this->request->is(['patch','post', 'put'])) {
+            if(isset($_POST['select_date']) && $_POST['select_date'] != '')
+                $this->request->data['created_date'] = $_POST['select_date'];
+            if(isset($_POST['closing_date']) && $_POST['closing_date'] != '')
+                $this->request->data['modified_date'] = $_POST['closing_date'];
+
+            if($_POST['status'] == 1)
+            {
+                $dateDiff = date_diff((new FrozenTime($_POST['modified_date'])), $clientFd['created_date']);
+                $duration = floor(($dateDiff->y * 12 + $dateDiff->m) / 3);
+                $finalFdAmount = $clientFd['fd_amount'] * pow((1 + ($clientFd['rate_of_interest'] / 100)), $duration);
+                $this->request->data['terminating_amount'] = $finalFdAmount;
+            }
+            else
+            {
+                $this->request->data['terminating_amount'] = 0;
+            }
             $clientFd = $this->ClientFd->patchEntity($clientFd, $this->request->data);
             if ($this->ClientFd->save($clientFd)) {
                 $this->Flash->success(__('Client\'s FD has been saved.'));

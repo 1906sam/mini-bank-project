@@ -62,7 +62,7 @@ class ClientLoanPaymentsTable extends Table
         $validator
             ->integer('installment_received')
             ->requirePresence('installment_received', 'create')
-            ->notEmpty('installment_received');
+            ->allowEmpty('installment_received');
 
         $validator
             ->integer('final_loan_amount')

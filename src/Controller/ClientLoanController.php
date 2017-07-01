@@ -21,9 +21,22 @@ class ClientLoanController extends AppController
         $this->paginate = [
             'contain' => ['ClientDetails']
         ];
+        $clientLoanPaymentModel = $this->loadModel('ClientLoanPayments');
+        $clientLoanModel = $this->loadModel('ClientLoan');
+        $clientLoanData = $clientLoanModel->find('all')->toArray();
+        
+        foreach ($clientLoanData as $data)
+        {
+            $clientLoanPaymentData = $clientLoanPaymentModel->find('all',[
+                'conditions' => ['client_loan_id' => $data['id']],
+                'order' => ['created_date' => 'desc']
+            ])->first();
+
+            $clientLoanLastPayment[$data['id']] = $clientLoanPaymentData['created_date'];
+        }
         $clientLoan = $this->paginate($this->ClientLoan);
 
-        $this->set(compact('clientLoan'));
+        $this->set(compact('clientLoan','clientLoanLastPayment'));
         $this->set('_serialize', ['clientLoan']);
     }
 
@@ -52,14 +65,39 @@ class ClientLoanController extends AppController
     public function add()
     {
         $clientLoan = $this->ClientLoan->newEntity();
+        $clientRdModel = $this->loadModel('ClientRd');
         if ($this->request->is('post')) {
-            $clientLoan = $this->ClientLoan->patchEntity($clientLoan, $this->request->data);
-            if ($this->ClientLoan->save($clientLoan)) {
-                $this->Flash->success(__('The client loan has been saved.'));
+            $clientRdData = $clientRdModel->find('all',[
+                'conditions' => ['client_id' => $_POST['client_id'],'status' => 0]
+            ])->toArray();
 
-                return $this->redirect(['action' => 'index']);
+            if(empty($clientRdData))
+            {
+                $this->Flash->error(__('Loan cannot be given without RD.'));
+                return $this->redirect(['action' => 'add']);
             }
-            $this->Flash->error(__('The client loan could not be saved. Please, try again.'));
+
+            if(isset($_POST['select_date']) && $_POST['select_date'] != '')
+                $this->request->data['created_date'] = $_POST['select_date'];
+            if(isset($_POST['closing_date']) && $_POST['closing_date'] != '')
+                $this->request->data['modified_date'] = $_POST['closing_date'];
+
+            $clientLoan = $this->ClientLoan->patchEntity($clientLoan, $this->request->data);
+            try
+            {
+                if ($this->ClientLoan->save($clientLoan)) {
+                    $this->Flash->success(__('The client loan has been saved.'));
+
+                    return $this->redirect(['action' => 'index']);
+                }
+                else
+                    $this->Flash->error(__('The client loan could not be saved. Please, try again.'));
+                
+            }catch (\PDOException $e)
+            {
+                if ($e->errorInfo[1] == 1062)
+                    $this->Flash->error(__('Loan already present for the selected Client.'));
+            }
         }
         $clientDetails = $this->ClientLoan->ClientDetails->find('all', [
             'conditions' => ['status' => 1]
@@ -91,8 +129,10 @@ class ClientLoanController extends AppController
         $initialStatus = $clientLoan['status'];
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            if($clientLoan['status'] == 1 && $_POST['status'] == 0)
-                $this->request->data['created_date'] = date("Y-m-d H:i:s");
+            if(isset($_POST['select_date']) && $_POST['select_date'] != '')
+                $this->request->data['created_date'] = $_POST['select_date'];
+            if(isset($_POST['closing_date']) && $_POST['closing_date'] != '')
+                $this->request->data['modified_date'] = $_POST['closing_date'];
 
             $clientLoanPaymentsModel = $this->loadModel('ClientLoanPayments');
             $clientLoanPatched = $this->ClientLoan->patchEntity($clientLoan, $this->request->data);

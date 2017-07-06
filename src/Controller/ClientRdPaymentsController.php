@@ -34,21 +34,24 @@ class ClientRdPaymentsController extends AppController
             'valueField' => 'client_id'
         ])->toArray();
 
-        $clientData = $clientDetails->find('list',[
-            'keyField' => 'id',
-            'valueField' => 'client_name',
-            'conditions' => ['id in' => $clientRdData]
-        ])->toArray();
-
-        foreach ($clientRdValue as $rdValue)
-                $clientRdDateValues[$rdValue['id']] = $rdValue['created_date'];
-
-        $clientRdInfo = null;
-        foreach (array_keys($clientRdData) as $key)
+        if(!empty($clientRdData))
         {
-            $clientRdInfo[$key] = $clientData[$clientRdData[$key]];
-        }
+            $clientData = $clientDetails->find('list',[
+                'keyField' => 'id',
+                'valueField' => 'client_name',
+                'conditions' => ['id in' => $clientRdData]
+            ])->toArray();
 
+            foreach ($clientRdValue as $rdValue)
+                    $clientRdDateValues[$rdValue['id']] = $rdValue['created_date'];
+
+            $clientRdInfo = null;
+            foreach (array_keys($clientRdData) as $key)
+            {
+                $clientRdInfo[$key] = $clientData[$clientRdData[$key]];
+            }
+
+        }
         $this->set(compact(['clientRdPayments','clientRdInfo','clientRdData','clientRdDateValues']));
         $this->set('_serialize', ['clientRdPayments']);
     }

@@ -30,16 +30,19 @@ class ClientLoanPaymentsController extends AppController
             'valueField' => 'client_id'
         ])->toArray();
 
-        $clientData = $clientDetails->find('list',[
-            'keyField' => 'id',
-            'valueField' => 'client_name',
-            'conditions' => ['id in' => $clientLoanData]
-        ])->toArray();
-
-        $clientLoanInfo = null;
-        foreach ($clientLoanData as $data)
+        if(!empty($clientLoanData))
         {
-            $clientLoanInfo[array_search($data,$clientLoanData)] = $clientData[$data];
+            $clientData = $clientDetails->find('list',[
+                'keyField' => 'id',
+                'valueField' => 'client_name',
+                'conditions' => ['id in' => $clientLoanData]
+            ])->toArray();
+
+            $clientLoanInfo = null;
+            foreach ($clientLoanData as $data)
+            {
+                $clientLoanInfo[array_search($data,$clientLoanData)] = $clientData[$data];
+            }
         }
 
         $this->set(compact('clientLoanPayments','clientLoanInfo','clientLoanData'));

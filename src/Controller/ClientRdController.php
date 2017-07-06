@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\I18n\FrozenTime;
 
 /**
  * ClientRd Controller
@@ -77,16 +78,22 @@ class ClientRdController extends AppController
 
             if(!empty($clientRdData))
             {
-                $today = date_create(date("Y-m-d H:i:s"));
-                $dateDiff = date_diff($today, $clientRdData[0]['created_date']);
 
                 if(isset($_POST['select_date']) && $_POST['select_date'] != '')
+                {
                     $this->request->data['created_date'] = $_POST['select_date'];
+                    $today = date_create($_POST['select_date']);
+                }
+                else
+                    $today = date_create(date("Y-m-d H:i:s"));
 
                 if(isset($_POST['closing_date']) && $_POST['closing_date'] != '')
                     $this->request->data['modified_date'] = $_POST['closing_date'];
 
-                if ($dateDiff->y >= 1 && sizeof($clientRdData) < 5) {
+                $dateDiff = date_diff($today, $clientRdData[0]['created_date']);
+
+                if ($dateDiff->y >= 1 && sizeof($clientRdData) < 5)
+                {
                     $clientRd = $this->ClientRd->patchEntity($clientRd, $this->request->data);
                     try {
                         if ($this->ClientRd->save($clientRd)) {

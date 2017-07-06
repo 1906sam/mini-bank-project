@@ -54,7 +54,7 @@ class AdminController extends AppController
             'conditions' => ['status' => 0]
         ])->sumOf('loan_amount');
 
-    ///////// Code for tables having cumulative data starts from here /////////////////////
+        ///////// Code for tables having cumulative data starts from here /////////////////////
 
         /******  Code for FD ******/
         $clientRunFdData = $clientFdModel->find('all',[
@@ -144,21 +144,26 @@ class AdminController extends AppController
             'limit' => 10
         ])->toArray();
 
-        $clientRdPaymentsId = $clientRdPaymentsModel->find('all',[
-            'fields' => ['client_rd_id','id' => 'MAX(id)'],
-            'conditions' => ['client_rd_id in ' => $clientRdId,'status' => 1],
-            'group' => ['client_rd_id']
-        ])->toArray();
+        if(!empty($clientRdId))
+        {
+            $clientRdPaymentsId = $clientRdPaymentsModel->find('all',[
+                'fields' => ['client_rd_id','id' => 'MAX(id)'],
+                'conditions' => ['client_rd_id in ' => $clientRdId,'status' => 1],
+                'group' => ['client_rd_id']
+            ])->toArray();
 
-        $clientRdPaymentsId = Hash::extract($clientRdPaymentsId,"{n}.id");
+            $clientRdPaymentsId = Hash::extract($clientRdPaymentsId,"{n}.id");
+            if(!empty($clientRdPaymentsId))
+            {
+                $clientRdPayments = $clientRdPaymentsModel->find('all',[
+                    'fields' => ['client_rd_id','installment_received','created_date' => 'MAX(created_date)'],
+                    'conditions' => ['id in' => $clientRdPaymentsId],
+                    'group' => ['client_rd_id','installment_received'],
+                    'order' => ['MAX(created_date)' => 'desc']
+                ])->toArray();
+            }
 
-        $clientRdPayments = $clientRdPaymentsModel->find('all',[
-             'fields' => ['client_rd_id','installment_received','created_date' => 'MAX(created_date)'],
-             'conditions' => ['id in' => $clientRdPaymentsId],
-             'group' => ['client_rd_id','installment_received'],
-             'order' => ['MAX(created_date)' => 'desc']
-         ])->toArray();
-
+        }
 
         $clientRdDataValue = $clientRdModel->find('list',[
             'keyField' => 'id',
@@ -187,13 +192,15 @@ class AdminController extends AppController
             'limit' => 10
         ])->toArray();
 
-        $clientLoanPaymentsId = $clientLoanPaymentsModel->find('all',[
-            'fields' => ['client_loan_id','id' => 'MAX(id)'],
-            'conditions' => ['client_loan_id in ' => $clientLoanId,'status' => 1],
-            'group' => ['client_loan_id']
-        ])->toArray();
+        if(!empty($clientLoanId))
+        {
+            $clientLoanPaymentsId = $clientLoanPaymentsModel->find('all',[
+                'fields' => ['client_loan_id','id' => 'MAX(id)'],
+                'conditions' => ['client_loan_id in ' => $clientLoanId,'status' => 1],
+                'group' => ['client_loan_id']
+            ])->toArray();
 
-        $clientLoanPaymentsId = Hash::extract($clientLoanPaymentsId,"{n}.id");
+            $clientLoanPaymentsId = Hash::extract($clientLoanPaymentsId,"{n}.id");
 
             $clientLoanPayments = $clientLoanPaymentsModel->find('all',[
                 'fields' => ['client_loan_id','final_loan_amount' => 'MIN(final_loan_amount)','created_date' => 'MAX(created_date)'],
@@ -201,6 +208,7 @@ class AdminController extends AppController
                 'group' => ['client_loan_id'],
                 'order' => ['MAX(created_date)' => 'desc']
             ])->toArray();
+        }
 
         $clientLoanDataValue = $clientLoanModel->find('list',[
             'keyField' => 'id',
@@ -208,17 +216,21 @@ class AdminController extends AppController
             'conditions' => ['status' => 0]
         ])->toArray();
 
-        $clientData = $clientModel->find('list',[
-            'keyField' => 'id',
-            'valueField' => 'client_name',
-            'conditions' => ['id in' => $clientLoanDataValue]
-        ])->toArray();
 
-        $clientLoanInfo = null;
-        $clientLoanDataValueKeys = array_keys($clientLoanDataValue);
-        foreach ($clientLoanDataValueKeys as $key)
+        if(!empty($clientLoanDataValue))
         {
-            $clientLoanInfo[$key] = $clientData[$clientLoanDataValue[$key]];
+            $clientData = $clientModel->find('list',[
+                'keyField' => 'id',
+                'valueField' => 'client_name',
+                'conditions' => ['id in' => $clientLoanDataValue]
+            ])->toArray();
+
+            $clientLoanInfo = null;
+            $clientLoanDataValueKeys = array_keys($clientLoanDataValue);
+            foreach ($clientLoanDataValueKeys as $key)
+            {
+                $clientLoanInfo[$key] = $clientData[$clientLoanDataValue[$key]];
+            }
         }
 
         $this->set(compact('clientRunFdData','clientComFdData','totalRunningRdInwardCash','totalRunningRdOutwardCash',

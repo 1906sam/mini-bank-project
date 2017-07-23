@@ -68,6 +68,9 @@ class ClientDetailsTable extends Table
             ->notEmpty('client_sign_photo');
 
         $validator
+            ->allowEmpty('client_address');
+
+        $validator
             ->integer('status')
             ->requirePresence('status', 'create')
             ->notEmpty('status');

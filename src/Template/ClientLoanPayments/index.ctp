@@ -3,8 +3,6 @@
   * @var \App\View\AppView $this
   */
 ?>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/pdfmake-0.1.18/dt-1.10.13/af-2.1.3/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/b-print-1.2.4/kt-2.2.0/r-2.1.1/se-1.2.0/datatables.min.css"/>
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/pdfmake-0.1.18/dt-1.10.13/af-2.1.3/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/b-print-1.2.4/kt-2.2.0/r-2.1.1/se-1.2.0/datatables.min.js"></script>
 
 <div class="clientLoanPayments index large-9 medium-8 columns content">
     <h1 style="text-align: center; text-decoration: underline"><?= __('Client\'s Loan Payments') ?></h1>
@@ -47,12 +45,12 @@
                             echo "Old";
                         ?>
                     </td>
-                <td><?= h($clientLoanPayment->created_date->nice()) ?></td>
+                <td><?= h($clientLoanPayment->created_date->format("d-M-Y")) ?></td>
 <!--                <td>--><?php //h($clientLoanPayment->modified_date) ?><!--</td>-->
                 <td class="actions">
 <!--                    --><?php //echo $this->Html->link(__('View'), ['action' => 'view', $clientLoanPayment->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $clientLoanPayment->id]) ?>
-<!--                    --><?php //echo $this->Form->postLink(__('Delete'), ['action' => 'delete', $clientLoanPayment->id], ['confirm' => __('Are you sure you want to delete # {0}?', $clientLoanPayment->id)]) ?>
+                    <?php //echo  $this->Html->link(__('Edit'), ['action' => 'edit', $clientLoanPayment->id]) ?>
+                    <?php echo $this->Form->postLink(__('Delete'), ['action' => 'delete', $clientLoanPayment->id], ['confirm' => __('Are you sure you want to delete # {0}?', $clientLoanPayment->id)]) ?>
                 </td>
             </tr>
             <?php endforeach; ?>
@@ -60,20 +58,22 @@
     </table>
 </div>
 <script>
-    $('#clientLoanPaymentTable').DataTable({
-        dom: 'Bfrtip',
-        buttons: [
+    $(document).ready(function() {
+        $.fn.dataTable.moment('D-MMM-YYYY');
+        $('#clientLoanPaymentTable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
 //            'copy',
 //            'csv',
-            'excel',
-            'pdf',
-            'print',
-            'colvis'
-        ],
-        responsive: true,
-        //keys: true,
-        //autoFill: true,
-        "pagingType": "first_last_numbers"
+                'excel',
+                'pdf',
+                'print',
+                'colvis'
+            ],
+            responsive: true,
+            //keys: true,
+            //autoFill: true,
+            "pagingType": "first_last_numbers"
 //        columnDefs: [ {
 //            orderable: false,
 //            className: 'select-checkbox',
@@ -84,5 +84,6 @@
 //            selector: 'td:first-child'
 //        },
 //        order: [[ 1, 'asc' ]]
+        });
     });
 </script>

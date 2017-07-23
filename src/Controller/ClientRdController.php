@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\I18n\FrozenTime;
 
 /**
  * ClientRd Controller
@@ -24,8 +25,21 @@ class ClientRdController extends AppController
         $batchModel = $this->loadModel('Batches');
         $clientRd = $this->paginate($this->ClientRd);
         $batchData = $batchModel->newEntity();
-        
-        $this->set(compact('clientRd','batchData'));
+        $clientRdPaymentModel = $this->loadModel('ClientRdPayments');
+        $clientRdModel = $this->loadModel('ClientRd');
+        $clientRdData = $clientRdModel->find('all')->toArray();
+
+        foreach ($clientRdData as $data)
+        {
+            $clientRdPaymentData = $clientRdPaymentModel->find('all',[
+                'conditions' => ['client_rd_id' => $data['id']],
+                'order' => ['created_date' => 'desc']
+            ])->first();
+
+            $clientRdLastPayment[$data['id']] = $clientRdPaymentData['created_date'];
+        }
+
+        $this->set(compact('clientRd','batchData','clientRdLastPayment'));
         $this->set('_serialize', ['clientRd']);
     }
 
@@ -54,22 +68,74 @@ class ClientRdController extends AppController
     public function add()
     {
         $clientRd = $this->ClientRd->newEntity();
-        if ($this->request->is('post')) {
-            $clientRd = $this->ClientRd->patchEntity($clientRd, $this->request->data);
-            try
+
+        if ($this->request->is('post'))
+        {
+            $clientRdData = $this->ClientRd->find('all',[
+                'conditions' => ['client_id' => $_POST['client_id']],
+                'order' => ['created_date' => 'desc']
+            ])->toArray();
+
+            if(!empty($clientRdData))
             {
-                if ($this->ClientRd->save($clientRd)) {
 
-                    $this->Flash->success(__('Client\'s RD details has been saved.'));
-
-                    return $this->redirect('/viewRdInformation');
+                if(isset($_POST['select_date']) && $_POST['select_date'] != '')
+                {
+                    $this->request->data['created_date'] = $_POST['select_date'];
+                    $today = date_create($_POST['select_date']);
                 }
-            } catch(\PDOException $e)
-            {
-                if($e->errorInfo[1] == 1062)
-                    $this->Flash->error(__('RD already present for the selected user.'));
+                else
+                    $today = date_create(date("Y-m-d H:i:s"));
+
+                if(isset($_POST['closing_date']) && $_POST['closing_date'] != '')
+                    $this->request->data['modified_date'] = $_POST['closing_date'];
+
+                $dateDiff = date_diff($today, $clientRdData[0]['created_date']);
+
+                if ($dateDiff->y >= 1 && sizeof($clientRdData) < 5)
+                {
+                    $clientRd = $this->ClientRd->patchEntity($clientRd, $this->request->data);
+                    try {
+                        if ($this->ClientRd->save($clientRd)) {
+
+                            $this->Flash->success(__('Client\'s RD details has been saved.'));
+
+                            return $this->redirect('/viewRdInformation');
+                        }
+                    } catch (\PDOException $e) {
+                        $this->Flash->error(__($e->errorInfo[1]));
+                    }
+                    $this->Flash->error(__('Client\'s RD could not be saved. Please, try again.'));
+                }
+                else
+                {
+                    if($dateDiff->y < 1)
+                        $this->Flash->error(__('New RD cannot be created before 1 year.'));
+                    else if(sizeof($clientRdData) > 5)
+                        $this->Flash->error(__('Can\'t create more than 5 RD\'s.'));
+                }
             }
-            $this->Flash->error(__('Client\'s RD could not be saved. Please, try again.'));
+            else
+            {
+                if(isset($_POST['select_date']) && $_POST['select_date'] != '')
+                    $this->request->data['created_date'] = $_POST['select_date'];
+
+                if(isset($_POST['closing_date']) && $_POST['closing_date'] != '')
+                    $this->request->data['modified_date'] = $_POST['closing_date'];
+
+                $clientRd = $this->ClientRd->patchEntity($clientRd, $this->request->data);
+                try {
+                    if ($this->ClientRd->save($clientRd)) {
+
+                        $this->Flash->success(__('Client\'s RD details has been saved.'));
+
+                        return $this->redirect('/viewRdInformation');
+                    }
+                } catch (\PDOException $e) {
+                    $this->Flash->error(__($e->errorInfo[1]));
+                }
+                $this->Flash->error(__('Client\'s RD could not be saved. Please, try again.'));
+            }
         }
         $clientDetails = $this->ClientRd->ClientDetails->find('all', [
             'conditions' => ['status' => 1]
@@ -100,8 +166,12 @@ class ClientRdController extends AppController
         $initialStatus = $clientRd['status'];
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            if($clientRd['status'] == 1 && $_POST['status'] == 0)
-                $this->request->data['created_date'] = date("Y-m-d H:i:s");
+            if(isset($_POST['select_date']) && $_POST['select_date'] != '')
+                $this->request->data['created_date'] = $_POST['select_date'];
+
+            if(isset($_POST['closing_date']) && $_POST['closing_date'] != '')
+                $this->request->data['modified_date'] = $_POST['closing_date'];
+
 
             $clientRdPaymentsModel = $this->loadModel('ClientRdPayments');
 

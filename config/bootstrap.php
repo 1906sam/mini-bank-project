@@ -191,7 +191,8 @@ Type::build('time')
 Type::build('date')
     ->useImmutable();
 Type::build('datetime')
-    ->useImmutable();
+    ->useImmutable()
+    ->setLocaleFormat('yyyy-MM-dd');
 Type::build('timestamp')
     ->useImmutable();
 
@@ -227,10 +228,10 @@ Plugin::load('CakeDC/Users', ['routes' => true, 'bootstrap' => true]);
 Plugin::load('AdminLTE', ['bootstrap' => true, 'routes' => true]);
 
 Configure::write('Theme', [
-    'title' => 'AdminLTE',
+    'title' => 'BProject',
     'logo' => [
-        'mini' => '<b>A</b>LT',
-        'large' => '<b>Admin</b>LTE'
+        'mini' => '<b>B</b>P',
+        'large' => '<b>Bank</b>Project'
     ],
     'login' => [
         'show_remember' => false,
@@ -239,3 +240,6 @@ Configure::write('Theme', [
     ],
     'folder' => ROOT
 ]);
+
+define('NO_DATA',"Client RD and Loan doesn't exist.");
+define('PAYMENT_DONE',"Payment already received for this month.");

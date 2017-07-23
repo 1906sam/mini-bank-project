@@ -19,7 +19,7 @@
             <div class="small-box bg-aqua-gradient">
                 <div class="inner">
                     <h3><?= $clientCount; ?></h3>
-                    <p>Total Clients</p>
+                    <p>Total Active Clients</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-person-add"></i>
@@ -33,7 +33,7 @@
             <div class="small-box bg-red-gradient">
                 <div class="inner">
                     <h3><?= $clientRdData; ?></h3>
-                    <p>RD Deposites</p>
+                    <p>Active RD Deposit</p>
                 </div>
                 <div class="icon">
                     <i class="fa fa-inr"></i>
@@ -48,7 +48,7 @@
                 <div class="inner">
                     <h3><?= $clientFdCount; ?></h3>
 
-                    <p>FD Clients</p>
+                    <p>Active FD Clients</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-person-add"></i>
@@ -63,7 +63,7 @@
             <div class="small-box  bg-yellow-gradient">
                 <div class="inner">
                     <h3><?= $clientFdData; ?></h3>
-                    <p>FD Deposites</p>
+                    <p>Active FD Deposit</p>
                 </div>
                 <div class="icon">
                     <i class="fa fa-inr"></i>
@@ -79,7 +79,7 @@
                 <div class="inner">
                     <h3><?= $clientLoanCount; ?></h3>
 
-                    <p>Loan Clients</p>
+                    <p>Active Loan Clients</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-person-add"></i>
@@ -93,7 +93,7 @@
             <div class="small-box bg-green-gradient">
                 <div class="inner">
                     <h3><?= $clientLoanData; ?></h3>
-                    <p>Loan Deposites</p>
+                    <p>Active Loan Deposit</p>
                 </div>
                 <div class="icon">
                     <i class="fa fa-inr"></i>
@@ -108,8 +108,85 @@
     -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.6); -o-box-shadow: 0 0 10px rgba(0,0,0,0.6);">
         <!-- Left col -->
 <!--        <section class="col-lg-5 connectedSortable">-->
+        <div class="row">
+        <div class="col-md-8" style="text-align: center; margin: 0 auto; float: none;">
+            <p style="text-align: center; font-size: x-large; text-decoration: underline">Cash summary</p>
+            <table class="vertical-table">
+                <tr>
+                    <th scope="row"><?= __('FD Cash Inward') ?> <span style="font-weight: normal;">(Sum of all running FD's amount)</span></th>
+                    <td><?= $this->Number->currency($clientRunFdData) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= __('FD Cash Outward') ?> <span style="font-weight: normal;"> (Sum of all closed FD's terminating amount)</span></th>
+                    <td><?= $this->Number->currency($clientComFdData) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= __('RD Cash Inward') ?><span style="font-weight: normal;"> (Sum of Installments and penalty for all Running RD)</span></th>
+                    <td><?= $this->Number->currency($totalRunningRdInwardCash) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= __('RD Cash Outward') ?><span style="font-weight: normal;"> (Sum of all RDs terminating amount minus sum of all RDs penalty )</span></th>
+                    <td><?= $this->Number->currency($totalRunningRdOutwardCash) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= __('Loan Cash Inward') ?><span style="font-weight: normal;"> (Sum of interest and installment received of all running loan)</span></th>
+                    <td><?= $this->Number->currency($totalRunningLoanInwardCash) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= __('Loan Cash Outward') ?><span style="font-weight: normal;"> (Sum of all the loan given)</span></th>
+                    <td><?= $this->Number->currency($clientLoanData) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row" style="text-align: center; background-color: #2aabd2"><?= __('Net Cash Left') ?></th>
+                    <td style="text-align: center; background-color: #2aabd2"><?=
+                        $this->Number->currency($clientRunFdData - $clientComFdData + $totalRunningRdInwardCash - $totalRunningRdOutwardCash +
+                            $totalRunningLoanInwardCash - $clientLoanData);
+                        ?>
+                    </td>
+                </tr>
+            </table>
+<!--            <table id="clientSummaryTable" target="_blank" class="table table-striped table-bordered table-hover table-condensed dt-responsive nowrap" cellspacing="0"  width="100%">-->
+<!--                <thead>-->
+<!--                <tr>-->
+<!--                    <th>S.No.</th>-->
+<!--                    <th>FD Cash Inward</th>-->
+<!--                    <th>FD Cash Outward</th>-->
+<!--                    <th>RD Cash Inward</th>-->
+<!--                    <th>RD Cash Outward</th>-->
+<!--                    <th>Loan Cash Inward</th>-->
+<!--                    <th>Loan Cash Outward</th>-->
+<!--                    <th>Net cash Left</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                --><?php //$count = 0; $class = "";
+//                foreach ($clientLoanPayments as $payment):
+//                    $count++;
+//                    if($count %2 == 0)
+//                        $class = "";
+//                    else
+//                        //$class = "success";
+//                        ?>
+<!--                        <tr>-->
+<!--                        <td>--><?php //echo $this->Number->format($count) ?><!--</td>-->
+<!--                    <td>--><?php //echo $this->Html->link($clientLoanInfo[$payment->client_loan_id], ['controller' => 'ClientDetails', 'action' => 'view', $clientLoanDataValue[$payment->client_loan_id]]); ?><!--</td>-->
+<!--                    <td>--><?php //echo $this->Number->currency($payment->final_loan_amount) ?><!--</td>-->
+<!--                    <td>--><?php //echo h($payment->created_date->addMonth(1)->nice()) ?><!--</td>-->
+<!--                    </tr>-->
+<!--                --><?php //endforeach; ?>
+<!--                </tbody>-->
+<!--            </table>-->
+<!--            --><?php //if(sizeof($clientLoanPayments) > 10)  { ?>
+<!--                <a href="/viewLoanPayment"><p style="text-align: right;cursor: pointer; text-decoration: underline; color: blue">View more...</p></a>-->
+<!--            --><?php //} ?>
+        </div>
+        </div>
+
+        <br><br>
+        <div class="row">
+<!-- previous two tables (RD/Loan)-->
             <div class="col-lg-6">
-                <p style="text-align: center; font-size: large; text-decoration: underline">Upcoming RD Payments</p>
+                <p style="text-align: center; font-size: x-large; text-decoration: underline">Last 10 RD Payments</p>
                 <table id="clientRdTable" target="_blank" class="table table-striped table-bordered table-hover table-condensed dt-responsive nowrap" cellspacing="0"  width="100%">
                     <thead>
                     <tr>
@@ -129,18 +206,20 @@
                             //$class = "success";
                             ?>
                         <tr>
-                        <td><?= $this->Number->format($count) ?></td>
-                        <td><?= $this->Html->link($clientRdInfo[$payment->client_rd_id], ['controller' => 'ClientDetails', 'action' => 'view', $clientRdDataValue[$payment->client_rd_id]]); ?></td>
-                        <td><?= $this->Number->currency($payment->installment_received) ?></td>
-                        <td><?= h($payment->created_date->addMonth(1)->nice()) ?></td>
+                        <td><?php echo $this->Number->format($count) ?></td>
+                        <td><?php echo $this->Html->link($clientRdInfo[$payment->client_rd_id], ['controller' => 'ClientDetails', 'action' => 'view', $clientRdDataValue[$payment->client_rd_id]],['target' => '_blank']); ?></td>
+                        <td><?php echo $this->Number->currency($payment->installment_received) ?></td>
+                        <td><?php echo h($payment->created_date->format("Y-m-d")) ?></td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>
                 </table>
-                <a href="/viewRdPayment"><p style="text-align: right;cursor: pointer; text-decoration: underline; color: blue">View more...</p></a>
+                <?php if(sizeof($clientRdPayments) > 5)  { ?>
+                <a href="/viewRdPayment" target="_blank"><p style="text-align: right;cursor: pointer; text-decoration: underline; color: blue">View more...</p></a>
+                <?php } ?>
             </div>
-        <div class="col-lg-6">
-            <p style="text-align: center; font-size: large; text-decoration: underline">Upcoming Loan Payments</p>
+            <div class="col-lg-6">
+            <p style="text-align: center; font-size: x-large; text-decoration: underline">Last 10 Loan Payments</p>
             <table id="clientRdTable" target="_blank" class="table table-striped table-bordered table-hover table-condensed dt-responsive nowrap" cellspacing="0"  width="100%">
                 <thead>
                 <tr>
@@ -160,16 +239,21 @@
                         //$class = "success";
                         ?>
                         <tr>
-                        <td><?= $this->Number->format($count) ?></td>
-                    <td><?= $this->Html->link($clientLoanInfo[$payment->client_loan_id], ['controller' => 'ClientDetails', 'action' => 'view', $clientLoanDataValue[$payment->client_loan_id]]); ?></td>
-                    <td><?= $this->Number->currency($payment->final_loan_amount) ?></td>
-                    <td><?= h($payment->created_date->addMonth(1)->nice()) ?></td>
+                        <td><?php echo $this->Number->format($count) ?></td>
+                    <td><?php echo $this->Html->link($clientLoanInfo[$payment->client_loan_id], ['controller' => 'ClientDetails', 'action' => 'view', $clientLoanDataValue[$payment->client_loan_id]],['target' => '_blank']); ?></td>
+                    <td><?php echo $this->Number->currency($payment->final_loan_amount) ?></td>
+                    <td><?php echo h($payment->created_date->format("Y-m-d")) ?></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
             </table>
-            <a href="/viewLoanPayment"><p style="text-align: right;cursor: pointer; text-decoration: underline; color: blue">View more...</p></a>
+            <?php if(sizeof($clientLoanPayments) > 5)  { ?>
+            <a href="/viewLoanPayment" target="_blank"><p style="text-align: right;cursor: pointer; text-decoration: underline; color: blue">View more...</p></a>
+            <?php } ?>
         </div>
+        </div>
+<!-- Two tables code ends here -->
+
             <!-- Custom tabs (Charts with tabs)-->
 <!--            <div class="nav-tabs-custom">-->
 <!--                <!-- Tabs within a box -->

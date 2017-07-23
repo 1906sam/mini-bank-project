@@ -104,29 +104,38 @@ class ClientRdPaymentsController extends AppController
 //            {
 //                $today = date_create(date("Y-m-d H:i:s")); //->modify('-1 year');
 //            }
-//            $dateDiff = date_diff($today, $clientRdPaymentData['created_date']);
-//
-//            if($dateDiff->y == 0 && $dateDiff->m == 0)
-//            {
-//                $todayDate = date("Y-m-d");
-//                $lastPaymentDate = date_parse_from_format("Y-m-d",$clientRdPaymentData['created_date']->format("Y-m-d"));
-//                $todayDate = date_parse_from_format("Y-m-d",$todayDate);
-//                $diffMonth = $todayDate['month'] - $lastPaymentDate['month'];
-//            }
-//            else if($dateDiff->y >= 1)
-//                $diffMonth = $dateDiff->y*12 + $dateDiff->m;
-//            else
-//                $diffMonth = $dateDiff->m;
 
             if(empty($clientRdPaymentData))
             {
-                $this->request->data['final_rd_amount'] = (int)($clientRdData['rd_amount'] + ($clientRdData['rd_amount'] * $clientRdData['rate_of_interest'])/100);
+                $this->request->data['final_rd_amount'] = (int)$clientRdData['rd_amount'];
                 $this->request->data['interest_on_rd'] = (int)(($clientRdData['rd_amount'] * $clientRdData['rate_of_interest'])/100);
             }
             else
             {
-                $this->request->data['final_rd_amount'] = (int)($_POST['installment_received'] + ($clientRdPaymentData['final_rd_amount'] + ($clientRdPaymentData['final_rd_amount'] * $clientRdData['rate_of_interest'])/100));
-                $this->request->data['interest_on_rd'] = (int)($this->request->data['final_rd_amount'] - $_POST['installment_received'] - $clientRdPaymentData['final_rd_amount']);
+                $today = date_create($_POST['select_date']);//->modify('-1 year');
+                $dateDiff = date_diff($today, $clientRdPaymentData['created_date']);
+
+                if($dateDiff->y == 0 && $dateDiff->m == 0)
+                {
+                    $todayDate = date("Y-m-d");
+                    $lastPaymentDate = date_parse_from_format("Y-m-d",$clientRdPaymentData['created_date']->format("Y-m-d"));
+                    $todayDate = date_parse_from_format("Y-m-d",$todayDate);
+                    $diffMonth = $todayDate['month'] - $lastPaymentDate['month'];
+                }
+                else if($dateDiff->y >= 1)
+                    $diffMonth = $dateDiff->y*12 + $dateDiff->m;
+                else
+                    $diffMonth = $dateDiff->m;
+
+                $noOfPaymentReceived = $clientRdPaymentData['final_rd_amount']/$clientRdData['rd_amount'];
+                $clientRdPaymentDataFirst = $clientRdPaymentModel->find('all', [
+                    'conditions' => ['client_rd_id' => $id,'status' => 1],
+                    'order' => ['created_date' => 'asc']
+                ])->first();
+
+                $firstTermOfInterest = $clientRdPaymentDataFirst['interest_on_rd'] + (($noOfPaymentReceived+1) -1)*$clientRdPaymentDataFirst['interest_on_rd'];
+                $this->request->data['final_rd_amount'] = (int)($_POST['installment_received'] + $clientRdPaymentData['final_rd_amount']);
+                $this->request->data['interest_on_rd'] = ($diffMonth*(2*$firstTermOfInterest + ($diffMonth-1)*$clientRdPaymentDataFirst['interest_on_rd']))/2;
             }
 
             $clientRdPayment = $this->ClientRdPayments->patchEntity($clientRdPaymentEntity, $this->request->data);

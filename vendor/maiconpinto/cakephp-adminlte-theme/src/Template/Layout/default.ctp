@@ -226,6 +226,10 @@
 <![endif]-->
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
+<div style="width: 50px; height: 50px; position: absolute; float: right; z-index: 1000000; margin-left: 1300px;margin-top: 550px;" data-toggle="modal" data-target="#calculateModal">
+    <img style="height: 100%;" src="http://icons.iconarchive.com/icons/pelfusion/long-shadow-media/512/Calculator-icon.png">
+<!--    <img style="height: 100%" src="/img/install_coffee.jpg" data-toggle="modal" data-target="calculateModal">-->
+</div>
     <!-- Site wrapper -->
     <div class="wrapper">
         <header class="main-header">
@@ -268,7 +272,7 @@
 <!-- ./wrapper -->
 
     <!-- Bootstrap 3.3.5 -->
-<?php echo $this->Html->script('AdminLTE./bootstrap/js/bootstrap'); ?>
+<?php //echo $this->Html->script('AdminLTE./bootstrap/js/bootstrap'); ?>
     <?php
         if($_SERVER['REQUEST_URI'] == '/addFd' || $_SERVER['REQUEST_URI'] == '/addLoan' || $_SERVER['REQUEST_URI'] == '/addRd') { ?>
         <script>
@@ -299,6 +303,87 @@
             a.parent().addClass('active').parents('.treeview').addClass('active');
         }
     });
+</script>
+<style>
+    .test
+    {
+        display: none;
+    }
+</style>
+<div id="calculateModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Enter Data</h4>
+            </div>
+            <div class="modal-body">
+                <?php echo $this->Form->create(null,['method' => 'POST','id' => 'calculateFormId','name' => 'calculateNameForm','url' => '/admin/calculateMaturity','class'=>'form']) ?>
+                <?php
+                //echo $this->Form->input('clientIdArray',['id' => 'clientIdValues','type' => 'hidden']);
+                    echo '<input type="hidden" name="clientId" id="clientIdValues" />';
+                    echo $this->Form->input('select_cal_type',['label' => 'Calculation type','options' => ['1' => 'Recurring Deposit', '2' => 'Fixed Deposit'],'onclick' => 'selectCalculationType(this);','type' => 'select','required' => 'required']);
+                    echo '<div id="idForRd">';
+                    echo '<div class="form-group text required"><input type="text" id="rd_amount" name="rd_amount" class="form-control" placeholder="Enter RD Amount" /></div>';
+                    echo '<div class="form-group text required"><input type="text" id="rd_months" name="rd_months" placeholder="Total Months" class="form-control" /></div>';
+                    echo '<div class="form-group text required"><input type="text" id="rd_interest" name="rd_interest" placeholder="Interest" class="form-control" /></div>';
+                    echo '<div class="form-group text required">'.$this->Form->label(null,'Maturity amount:',['class' => 'form-control']).'</div>';
+                    echo '</div>';
+                    echo '<div id="idForFd" style="display: none;">';
+                    echo '<div class="form-group text required"><input type="text" id="fd_amount" name="fd_amount" class="form-control" placeholder="Enter FD Amount" /></div>';
+                    echo '<div class="form-group text required"><input type="text" id="fd_quaters" name="fd_quaters" placeholder="Total Quaters" class="form-control" /></div>';
+                    echo '<div class="form-group text required"><input type="text" id="fd_interest" name="fd_interest" placeholder="Interest" class="form-control" /></div>';
+                    echo '<div class="form-group text required">'.$this->Form->label(null,'Maturity amount:',['class' => 'form-control']).'</div>';
+                    echo '</div>';
+                ?>
+                <?php echo $this->Form->button(__('Submit')) ?>
+                <?php echo $this->Form->end() ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function selectCalculationType(reference) {
+        if(reference.value == 1)
+        {
+            document.getElementById('idForFd').style.display = "none";
+            document.getElementById('idForRd').style.display = "block";
+
+            $('#rd_amount').attr('required','required');
+            $('#rd_months').attr('required','required');
+            $('#rd_interest').attr('required','required');
+
+            $('#fd_amount').attr('value','');
+            $('#fd_quaters').attr('value','');
+            $('#fd_interest').attr('value','');
+            $('#fd_amount').attr('required','');
+            $('#fd_quaters').attr('required','');
+            $('#fd_interest').attr('required','');
+        }
+        else
+        {
+            document.getElementById('idForRd').style.display = "none";
+            document.getElementById('idForFd').style.display = "block";
+
+            $('#fd_amount').attr('required','required');
+            $('#fd_quaters').attr('required','required');
+            $('#fd_interest').attr('required','required');
+
+            $('#rd_amount').attr('value','');
+            $('#rd_months').attr('value','');
+            $('#rd_interest').attr('value','');
+            $('#rd_amount').attr('required',''
+            );
+            $('#rd_months').attr('required','');
+            $('#rd_interest').attr('required','');
+        }
+    }
 </script>
 </body>
 </html>

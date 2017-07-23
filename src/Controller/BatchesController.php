@@ -254,8 +254,15 @@ class BatchesController extends AppController
 
                             $totalRdamount += $diffMonth * $rdData['rd_amount'];
 
-                            $final_rd_amount = $totalRdamount + ($clientRdPaymentData['final_rd_amount']*pow((1+($rdData['rate_of_interest']/100)),$diffMonth));
-                            $interest_on_rd = $final_rd_amount - $totalRdamount - $clientRdPaymentData['final_rd_amount'];
+                            $noOfPaymentReceived = $clientRdPaymentData['final_rd_amount']/$rdData['rd_amount'];
+                            $clientRdPaymentDataFirst = $clientRdPaymentModel->find('all', [
+                                'conditions' => ['client_rd_id' => $rdData['id'],'status' => 1],
+                                'order' => ['created_date' => 'asc']
+                            ])->first();
+
+                            $firstTermOfInterest = $clientRdPaymentDataFirst['interest_on_rd'] + (($noOfPaymentReceived+1) -1)*$clientRdPaymentDataFirst['interest_on_rd'];
+                            $final_rd_amount = $clientRdPaymentData['final_rd_amount'] + $totalRdamount;
+                            $interest_on_rd = ($diffMonth*(2*$firstTermOfInterest + ($diffMonth-1)*$clientRdPaymentDataFirst['interest_on_rd']))/2;
 
                             $penalty = $this->Common->calculatePenalty($rdData, $clientRdPaymentData);
                         }

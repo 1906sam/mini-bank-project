@@ -163,7 +163,7 @@ class ClientDetailsController extends AppController
 
                         $penalty = 0;
                     } else {
-//                        $today = date("Y-m-d");
+//                        $today = date("Y-m-d"); 
 //                        $lastPaymentDate = date_parse_from_format("d-m-Y",$clientRdPaymentData['created_date']);
 //                        $todayDate = date_parse_from_format("Y-m-d",$today);
 //                        $diffMonth = $todayDate['month'] - $lastPaymentDate['month'];
@@ -188,11 +188,28 @@ class ClientDetailsController extends AppController
 
                         $total_rd_amount = $diffMonth*$rdData['rd_amount'];
 
-                        $final_rd_amount = $total_rd_amount + ($clientRdPaymentData['final_rd_amount']*pow((1+($rdData['rate_of_interest']/100)),$diffMonth));
-                        $interest_on_rd = $final_rd_amount - $total_rd_amount - $clientRdPaymentData['final_rd_amount'];
+                        //sum of n terms of ap = n/2(2a + (n-1)d);
+//                        $final_rd_amount = $total_rd_amount + ($clientRdPaymentData['final_rd_amount']*pow((1+($rdData['rate_of_interest']/100)),$diffMonth));
+//                        $interest_on_rd = $final_rd_amount - $total_rd_amount - $clientRdPaymentData['final_rd_amount'];
+
+                        $noOfPaymentReceived = $clientRdPaymentData['final_rd_amount']/$rdData['rd_amount'];
+                        $clientRdPaymentDataFirst = $clientRdPaymentModel->find('all', [
+                            'conditions' => ['client_rd_id' => $rdData['id'],'status' => 1],
+                            'order' => ['created_date' => 'asc']
+                        ])->first();
+
+                        $firstTermOfInterest = $clientRdPaymentDataFirst['interest_on_rd'] + (($noOfPaymentReceived+1) -1)*$clientRdPaymentDataFirst['interest_on_rd'];
+                        $final_rd_amount = $clientRdPaymentData['final_rd_amount'] + $total_rd_amount;
+                        $interest_on_rd = ($diffMonth*(2*$firstTermOfInterest + ($diffMonth-1)*$clientRdPaymentDataFirst['interest_on_rd']))/2;
 
                         $penalty = $this->Common->calculatePenalty($rdData, $clientRdPaymentData);
                     }
+
+//                    debug($diffMonth);
+//                    debug($total_rd_amount);
+//                    debug($clientRdPaymentData['final_rd_amount']);
+//                    debug($penalty);
+//                    die();
 
                     $clientRdPaymentEntity = $clientRdPaymentModel->newEntity();
                     $clientRdPaymentArray = array(

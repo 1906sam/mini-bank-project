@@ -71,7 +71,8 @@
             buttons: [
 //            'copy',
 //            'csv',
-                'excel',
+//                'copyHtml5', 'excelHtml5', 'pdfHtml5', 'csvHtml5'
+                'excelHtml5',
                 'pdf',
                 'print',
                 'colvis'

@@ -324,21 +324,21 @@
                 <?php
                 //echo $this->Form->input('clientIdArray',['id' => 'clientIdValues','type' => 'hidden']);
                     echo '<input type="hidden" name="clientId" id="clientIdValues" />';
-                    echo $this->Form->input('select_cal_type',['label' => 'Calculation type','options' => ['1' => 'Recurring Deposit', '2' => 'Fixed Deposit'],'onclick' => 'selectCalculationType(this);','type' => 'select','required' => 'required']);
+                    echo $this->Form->input('select_cal_type',['label' => 'Calculation type','id' => 'calculationId','options' => ['1' => 'Recurring Deposit', '2' => 'Fixed Deposit'],'onclick' => 'selectCalculationType(this);','type' => 'select','required' => 'required']);
                     echo '<div id="idForRd">';
                     echo '<div class="form-group text required"><input type="text" id="rd_amount" name="rd_amount" class="form-control" placeholder="Enter RD Amount" /></div>';
                     echo '<div class="form-group text required"><input type="text" id="rd_months" name="rd_months" placeholder="Total Months" class="form-control" /></div>';
                     echo '<div class="form-group text required"><input type="text" id="rd_interest" name="rd_interest" placeholder="Interest" class="form-control" /></div>';
-                    echo '<div class="form-group text required">'.$this->Form->label(null,'Maturity amount:',['class' => 'form-control']).'</div>';
+                    echo '<div class="form-group text required">'.$this->Form->label(null,'Maturity amount:',['class' => 'form-control','id' => 'amt_label1']).'</div>';
                     echo '</div>';
                     echo '<div id="idForFd" style="display: none;">';
                     echo '<div class="form-group text required"><input type="text" id="fd_amount" name="fd_amount" class="form-control" placeholder="Enter FD Amount" /></div>';
                     echo '<div class="form-group text required"><input type="text" id="fd_quaters" name="fd_quaters" placeholder="Total Quaters" class="form-control" /></div>';
                     echo '<div class="form-group text required"><input type="text" id="fd_interest" name="fd_interest" placeholder="Interest" class="form-control" /></div>';
-                    echo '<div class="form-group text required">'.$this->Form->label(null,'Maturity amount:',['class' => 'form-control']).'</div>';
+                    echo '<div class="form-group text required">'.$this->Form->label(null,'Maturity amount:',['class' => 'form-control amt_label','id' => 'amt_label2']).'</div>';
                     echo '</div>';
                 ?>
-                <?php echo $this->Form->button(__('Submit')) ?>
+                <button type="button" onclick="submitCalculationFormData()" class="btn btn-success" >Submit</button>
                 <?php echo $this->Form->end() ?>
             </div>
             <div class="modal-footer">
@@ -347,7 +347,7 @@
         </div>
     </div>
 </div>
-
+<script src="/js/jsCookie.js"></script>
 <script>
     function selectCalculationType(reference) {
         if(reference.value == 1)
@@ -359,12 +359,12 @@
             $('#rd_months').attr('required','required');
             $('#rd_interest').attr('required','required');
 
-            $('#fd_amount').attr('value','');
-            $('#fd_quaters').attr('value','');
-            $('#fd_interest').attr('value','');
-            $('#fd_amount').attr('required','');
-            $('#fd_quaters').attr('required','');
-            $('#fd_interest').attr('required','');
+            $('#fd_amount').val('');
+            $('#fd_quaters').val('');
+            $('#fd_interest').val('');
+            $('#fd_amount').removeAttr('required');
+            $('#fd_quaters').removeAttr('required');
+            $('#fd_interest').removeAttr('required');
         }
         else
         {
@@ -375,14 +375,58 @@
             $('#fd_quaters').attr('required','required');
             $('#fd_interest').attr('required','required');
 
-            $('#rd_amount').attr('value','');
-            $('#rd_months').attr('value','');
-            $('#rd_interest').attr('value','');
-            $('#rd_amount').attr('required',''
-            );
-            $('#rd_months').attr('required','');
-            $('#rd_interest').attr('required','');
+            $('#rd_amount').val('');
+            $('#rd_months').val('');
+            $('#rd_interest').val('');
+            $('#rd_amount').removeAttr('required');
+            $('#rd_months').removeAttr('required');
+            $('#rd_interest').removeAttr('required');
         }
+    }
+
+    function submitCalculationFormData() {
+        var element = document.querySelector("form");
+        element.addEventListener("submit", function(event) {
+            event.preventDefault();
+        });
+
+        var webURL = location.protocol + "//" + location.host;
+        var csrfToken = Cookies.get('csrfToken');
+        var calValue = document.getElementById('calculationId').value;
+        var amount=0,duration=0,interest = 0;
+        if(calValue == 1)
+        {
+            amount = document.getElementById('rd_amount').value;
+            duration = document.getElementById('rd_months').value;
+            interest = document.getElementById('rd_interest').value;
+        }
+        else
+        {
+            amount = document.getElementById('fd_amount').value;
+            duration = document.getElementById('fd_quaters').value;
+            interest = document.getElementById('fd_interest').value;
+        }
+        $.ajax({
+            url: webURL + '/admin/calculateMaturity',
+            type: "POST",
+            beforeSend: function(xhr){
+                xhr.setRequestHeader('X-CSRF-Token', csrfToken);
+            },
+            data: {
+                calValue : calValue,
+                amount : amount,
+                duration : duration,
+                interest : interest
+            },
+            success: function (data)
+            {
+                //document.getElementsByClassName('amt_label').innerHTML
+                document.getElementById('amt_label'+calValue).innerHTML = "Maturity amount: "+data;
+//                alert(data);
+            }
+        });
+
+//        return false;
     }
 </script>
 </body>

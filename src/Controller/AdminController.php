@@ -4,11 +4,13 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\Event\Event;
 use Cake\Utility\Hash;
+use Cake\I18n\Number;
 
 /**
  * ClientDetails Controller
  *
  * @property \App\Model\Table\ClientDetailsTable $ClientDetails
+ * @property bool|object Number
  */
 class AdminController extends AppController
 {
@@ -243,7 +245,23 @@ class AdminController extends AppController
 
     public function calculateMaturity()
     {
-        
+//        debug($_POST);
+//        die();
+
+        if($_POST['calValue'] == 1)  //calculate RD
+        {
+            $total_rd_amount = $_POST['amount']*$_POST['duration'];
+            $firstTermOfInterest = ($_POST['amount'] * $_POST['interest']) / 100;
+            $interest_on_rd = ($_POST['duration']*(2*$firstTermOfInterest + ($_POST['duration'] - 1)*$firstTermOfInterest))/2;
+            $final_rd_amount = $total_rd_amount + $interest_on_rd;
+            echo Number::currency($final_rd_amount,null,['places' => 2]);
+        }
+        else if($_POST['calValue'] == 2)
+        {
+            $finalFdAmount = $_POST['amount'] * pow((1 + ($_POST['interest'] / 100)), $_POST['duration']);
+            echo Number::currency($finalFdAmount,null,['places' => 2]);
+        }
+        die();
     }
 
 }

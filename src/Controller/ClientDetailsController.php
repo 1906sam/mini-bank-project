@@ -158,7 +158,7 @@ class ClientDetailsController extends AppController
 
                     if (empty($clientRdPaymentData)) {
                         $total_rd_amount = $rdData['rd_amount'];
-                        $final_rd_amount = $total_rd_amount + ($rdData['rd_amount'] * $rdData['rate_of_interest']) / 100;
+                        $final_rd_amount = $total_rd_amount;
                         $interest_on_rd = ($rdData['rd_amount'] * $rdData['rate_of_interest']) / 100;
 
                         $penalty = 0;

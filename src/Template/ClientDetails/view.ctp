@@ -152,7 +152,7 @@
                                     $today = date_create(date("Y-m-d H:i:s"));
                                     $dateDiff = date_diff($today, $clientFd['created_date']);
                                     $duration = floor(($dateDiff->y * 12 + $dateDiff->m) / 3);
-                                    $finalFdAmount = $clientFd['fd_amount'] * pow((1 + ($clientFd['rate_of_interest'] / 100)), $duration);
+                                    $finalFdAmount = $clientFd['fd_amount'] * pow((1 + ($clientFd['rate_of_interest'] / 400)), $duration);
                                     echo $this->Number->currency($finalFdAmount);
                                 }
                                 else
@@ -160,7 +160,7 @@
                                     $dateDiff = date_diff($clientFd['modified_date'], $clientFd['created_date']);
                                     $duration = floor(($dateDiff->y * 12 + $dateDiff->m) / 3);
 
-                                    $finalFdAmount = $clientFd['fd_amount'] * pow((1 + ($clientFd['rate_of_interest'] / 100)), $duration);
+                                    $finalFdAmount = $clientFd['fd_amount'] * pow((1 + ($clientFd['rate_of_interest'] / 400)), $duration);
                                     echo $this->Number->currency($finalFdAmount);
                                 }
                                 ?>

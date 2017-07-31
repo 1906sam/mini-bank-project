@@ -173,17 +173,20 @@ class AdminController extends AppController
             'conditions' => ['status' => 0]
         ])->toArray();
 
-        $clientData = $clientModel->find('list',[
-            'keyField' => 'id',
-            'valueField' => 'client_name',
-            'conditions' => ['id in' => $clientRdDataValue]
-        ])->toArray();
-
-        $clientRdInfo = null;
-        $clientRdDataValueKeys = array_keys($clientRdDataValue);
-        foreach ($clientRdDataValueKeys as $key)
+        if(!empty($clientRdDataValue))
         {
-            $clientRdInfo[$key] = $clientData[$clientRdDataValue[$key]];
+            $clientData = $clientModel->find('list',[
+                'keyField' => 'id',
+                'valueField' => 'client_name',
+                'conditions' => ['id in' => $clientRdDataValue]
+            ])->toArray();
+
+            $clientRdInfo = null;
+            $clientRdDataValueKeys = array_keys($clientRdDataValue);
+            foreach ($clientRdDataValueKeys as $key)
+            {
+                $clientRdInfo[$key] = $clientData[$clientRdDataValue[$key]];
+            }
         }
         // Rd payments code ends here: /////////////////////////////////////////
 
@@ -202,14 +205,17 @@ class AdminController extends AppController
                 'group' => ['client_loan_id']
             ])->toArray();
 
-            $clientLoanPaymentsId = Hash::extract($clientLoanPaymentsId,"{n}.id");
+            if(!empty($clientLoanPaymentsId))
+            {
+                $clientLoanPaymentsId = Hash::extract($clientLoanPaymentsId,"{n}.id");
 
-            $clientLoanPayments = $clientLoanPaymentsModel->find('all',[
-                'fields' => ['client_loan_id','final_loan_amount' => 'MIN(final_loan_amount)','created_date' => 'MAX(created_date)'],
-                'conditions' => ['id in' => $clientLoanPaymentsId],
-                'group' => ['client_loan_id'],
-                'order' => ['MAX(created_date)' => 'desc']
-            ])->toArray();
+                $clientLoanPayments = $clientLoanPaymentsModel->find('all',[
+                    'fields' => ['client_loan_id','final_loan_amount' => 'MIN(final_loan_amount)','created_date' => 'MAX(created_date)'],
+                    'conditions' => ['id in' => $clientLoanPaymentsId],
+                    'group' => ['client_loan_id'],
+                    'order' => ['MAX(created_date)' => 'desc']
+                ])->toArray();
+            }
         }
 
         $clientLoanDataValue = $clientLoanModel->find('list',[
@@ -258,7 +264,7 @@ class AdminController extends AppController
         }
         else if($_POST['calValue'] == 2)
         {
-            $finalFdAmount = $_POST['amount'] * pow((1 + ($_POST['interest'] / 100)), $_POST['duration']);
+            $finalFdAmount = $_POST['amount'] * pow((1 + ($_POST['interest'] / 400)), $_POST['duration']);
             echo Number::currency($finalFdAmount,null,['places' => 2]);
         }
         die();
